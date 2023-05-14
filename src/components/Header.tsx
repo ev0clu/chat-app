@@ -1,18 +1,49 @@
-import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+const Wrapper = styled.header`
+  grid-column: 2/3;
+  grid-row: 1/2;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-column-gap: 1rem;
+  border-bottom: 1px solid #d4d4d4;
+  padding: 1rem;
+`;
+
+const StyledLogo = styled.div`
+  grid-row: 1/3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: 500;
+  height: 4rem;
+  width: 4rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+  background-color: #059669;
+  color: #fff;
+`;
+
+const Title = styled.h2`
+  display: flex;
+  align-items: center;
+`;
+
+const Paragraph = styled.p`
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  color: #a3a3a3;
+`;
 
 const Header = () => {
   return (
-    <header className="sticky top-0 z-10 flex flex-row items-center justify-center bg-white px-4 py-4 font-lilita-one shadow-custom-1">
-      <div>
-        <div>
-          <img src="" alt="chat-logo" />
-        </div>
-        <div>
-          <h1>Chat</h1>
-          <p>date</p>
-        </div>
-      </div>
-    </header>
+    <Wrapper>
+      <StyledLogo>PC</StyledLogo>
+      <Title>Public Chat</Title>
+      <Paragraph>Last message at 14/05 16:27</Paragraph>
+    </Wrapper>
   );
 };
 

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const StyledSidebar = styled.div`
+const Wrapper = styled.div`
   grid-column: 2/3;
   grid-row: 2/3;
   padding: 1rem;
@@ -9,7 +9,7 @@ const StyledSidebar = styled.div`
 const Messages = () => {
   return (
     <>
-      <StyledSidebar>Messages</StyledSidebar>
+      <Wrapper>Messages</Wrapper>
     </>
   );
 };

@@ -6,6 +6,8 @@ import {
   signInWithPopup
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+
+import Footer from '../components/Footer';
 import Button from '../elements/Button';
 
 const Main = styled.main`
@@ -53,16 +55,19 @@ const Login = () => {
   };
 
   return (
-    <Main>
-      <Wrapper>
-        <h1>Welcome to the Chat App!</h1>
-        <h2>Let's talk with your friends</h2>
-        <Button
-          text="Sign in with Google"
-          handleClick={handleLoginClick}
-        />
-      </Wrapper>
-    </Main>
+    <>
+      <Main>
+        <Wrapper>
+          <h1>Welcome to the Chat App!</h1>
+          <h2>Let's talk with your friends</h2>
+          <Button
+            text="Sign in with Google"
+            handleClick={handleLoginClick}
+          />
+        </Wrapper>
+      </Main>
+      <Footer />
+    </>
   );
 };
 

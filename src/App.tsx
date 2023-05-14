@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Chat from './pages/Chat';
-import Footer from './components/Footer';
 
 function App() {
   return (
@@ -13,7 +12,6 @@ function App() {
           <Route path="/chat" element={<Chat />} />
         </Routes>
       </HashRouter>
-      <Footer />
     </>
   );
 }

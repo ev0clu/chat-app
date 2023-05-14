@@ -61,6 +61,7 @@ const Login = () => {
           <h1>Welcome to the Chat App!</h1>
           <h2>Let's talk with your friends</h2>
           <Button
+            isIcon={false}
             text="Sign in with Google"
             handleClick={handleLoginClick}
           />

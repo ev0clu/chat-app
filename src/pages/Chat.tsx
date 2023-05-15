@@ -1,14 +1,9 @@
-import styled, { ThemeProvider } from 'styled-components';
+import styled from 'styled-components';
 
 import { useEffect, useState } from 'react';
+import ThemeContext from '../components/ThemeContext';
 
-import {
-  getAuth,
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut
-} from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import {
   getFirestore,
   collection,
@@ -27,13 +22,21 @@ import Sidebar from '../components/Sidebar';
 import MessageWrapper from '../components/MessageWrapper';
 import InputWrapper from '../components/InputWrapper';
 
-const Wrapper = styled.div`
+interface WrapperProps {
+  color: string;
+}
+
+const Wrapper = styled.div<WrapperProps>`
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 3fr;
   grid-template-rows: auto 1fr auto;
-  color: ${(props) => props.theme.color};
-  background-color: ${(props) => props.theme.background};
+  color: ${(props) =>
+    props.color === 'light' ? lightTheme.color : darkTheme.color};
+  background-color: ${(props) =>
+    props.color === 'light'
+      ? lightTheme.background
+      : darkTheme.background};
 `;
 
 const lightTheme = {
@@ -48,12 +51,29 @@ const darkTheme = {
 const Chat = () => {
   const [userPic, setUserPic] = useState('');
   const [userName, setUserName] = useState('');
-  const [themeIcon, setThemeIcon] = useState('dark');
-  const [themeColor, setThemeColor] = useState(lightTheme);
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
     initFirebaseAuth();
+    restoreTheme();
   }, []);
+
+  const saveTheme = (data: string) => {
+    localStorage.setItem('data-theme', JSON.stringify(data));
+  };
+
+  const restoreTheme = () => {
+    const themeData = localStorage.getItem('data-theme');
+    console.log(themeData);
+    let data: string = '';
+    if (themeData === null) {
+      data = 'light';
+    } else {
+      data = JSON.parse(themeData);
+    }
+    setTheme(data);
+    saveTheme(data);
+  };
 
   const signOutUser = () => {
     signOut(getAuth());
@@ -107,27 +127,24 @@ const Chat = () => {
   };
 
   const handleThemeClick = () => {
-    setThemeColor((currentThemeColor) =>
-      currentThemeColor === lightTheme ? darkTheme : lightTheme
-    );
-    setThemeIcon((currentThemeIcon) =>
-      currentThemeIcon === 'dark' ? 'light' : 'dark'
-    );
+    const data: string = theme === 'light' ? 'dark' : 'light';
+    setTheme(data);
+    saveTheme(data);
   };
 
   return (
-    <ThemeProvider theme={themeColor}>
-      <Wrapper>
+    <ThemeContext.Provider value={theme}>
+      <Wrapper color={theme}>
         <Sidebar
           userPic={userPic}
-          themeIcon={themeIcon}
           handleThemeClick={handleThemeClick}
+          signOutUser={signOutUser}
         />
         <Header />
-        <MessageWrapper themeIcon={themeIcon} />
+        <MessageWrapper />
         <InputWrapper />
       </Wrapper>
-    </ThemeProvider>
+    </ThemeContext.Provider>
   );
 };
 

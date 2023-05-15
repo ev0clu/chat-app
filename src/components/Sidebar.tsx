@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-
+import ThemeContext from './ThemeContext';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../elements/Button';
 
@@ -12,7 +13,7 @@ const Wrapper = styled.div<WrapperProps>`
   grid-row: 1/4;
   border-right: 1px solid
     ${(props) =>
-      props.themeColor === 'dark' ? '#d4d4d4' : '#78716c'};
+      props.themeColor === 'light' ? '#78716c' : '#d4d4d4'};
   padding: 1rem;
 `;
 
@@ -48,32 +49,38 @@ const ButtonWrapper = styled.div`
 
 interface Props {
   userPic: string;
-  themeIcon: string;
   handleThemeClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  signOutUser: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const Sidebar = ({ userPic, themeIcon, handleThemeClick }: Props) => {
+const Sidebar = ({
+  userPic,
+  handleThemeClick,
+  signOutUser
+}: Props) => {
+  const theme = useContext(ThemeContext);
   return (
-    <Wrapper themeColor={themeIcon === 'dark' ? 'dark' : 'light'}>
+    <Wrapper themeColor={theme === 'light' ? 'dark' : 'light'}>
       <StyledSectionTop>
         <StyledUserPic backgroundImage={userPic}></StyledUserPic>
         <ButtonWrapper>
           <Button
             isIcon={true}
             icon="add"
-            themeColor={themeIcon === 'dark' ? 'dark' : 'light'}
+            themeColor={theme === 'light' ? 'dark' : 'light'}
           />
           <StyledLink to="/">
             <Button
               isIcon={true}
               icon="log-out"
-              themeColor={themeIcon === 'dark' ? 'dark' : 'light'}
+              themeColor={theme === 'light' ? 'dark' : 'light'}
+              handleClick={signOutUser}
             />
           </StyledLink>
           <Button
             isIcon={true}
-            icon={themeIcon === 'dark' ? 'light' : 'dark'}
-            themeColor={themeIcon === 'dark' ? 'dark' : 'light'}
+            icon={theme === 'light' ? 'dark' : 'light'}
+            themeColor={theme === 'light' ? 'dark' : 'light'}
             handleClick={handleThemeClick}
           />
         </ButtonWrapper>

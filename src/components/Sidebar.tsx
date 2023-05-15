@@ -5,15 +5,16 @@ import { Link } from 'react-router-dom';
 import Button from '../elements/Button';
 
 interface WrapperProps {
-  themeColor: string;
+  $themeColor: string;
 }
 
 const Wrapper = styled.div<WrapperProps>`
   grid-column: 1/2;
   grid-row: 1/4;
+  // eslint-disable-next-line react/prop-types
   border-right: 1px solid
     ${(props) =>
-      props.themeColor === 'light' ? '#78716c' : '#d4d4d4'};
+      props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
   padding: 1rem;
 `;
 
@@ -29,14 +30,14 @@ const StyledSectionTop = styled.section`
 `;
 
 interface StyledUserPicProps {
-  backgroundImage: string;
+  $backgroundImage: string;
 }
 
 const StyledUserPic = styled.div<StyledUserPicProps>`
   height: 4rem;
   width: 4rem;
   border-radius: 50%;
-  background-image: ${(props) => props.backgroundImage};
+  background-image: ${(props) => props.$backgroundImage};
   background-repeat: no-repeat;
   background-size: 4rem;
 `;
@@ -60,9 +61,9 @@ const Sidebar = ({
 }: Props) => {
   const theme = useContext(ThemeContext);
   return (
-    <Wrapper themeColor={theme === 'light' ? 'dark' : 'light'}>
+    <Wrapper $themeColor={theme === 'light' ? 'dark' : 'light'}>
       <StyledSectionTop>
-        <StyledUserPic backgroundImage={userPic}></StyledUserPic>
+        <StyledUserPic $backgroundImage={userPic}></StyledUserPic>
         <ButtonWrapper>
           <Button
             isIcon={true}

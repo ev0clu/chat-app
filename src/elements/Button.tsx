@@ -66,7 +66,7 @@ const StyledIconMsgButton = styled.button`
 `;
 
 interface StyledIconSidebarButton {
-  themeColor: string;
+  $themeColor: string;
 }
 
 const StyledIconSidebarButton = styled.button<StyledIconSidebarButton>`
@@ -77,7 +77,7 @@ const StyledIconSidebarButton = styled.button<StyledIconSidebarButton>`
   border-radius: 50%;
   border-style: none;
   color: ${(props) =>
-    props.themeColor === 'dark' ? '#78716c' : '#fff'};
+    props.$themeColor === 'dark' ? '#78716c' : '#fff'};
   cursor: pointer;
   font-size: 2.2rem;
   font-weight: 700;
@@ -88,7 +88,7 @@ const StyledIconSidebarButton = styled.button<StyledIconSidebarButton>`
 
   &:hover {
     background-color: ${(props) =>
-      props.themeColor === 'dark' ? '#e7e5e4' : '#a8a29e'};
+      props.$themeColor === 'dark' ? '#e7e5e4' : '#a8a29e'};
     cursor: pointer;
   }
 
@@ -129,7 +129,7 @@ const Button = ({
       } else if (icon === 'log-out') {
         return (
           <StyledIconSidebarButton
-            themeColor={themeColor || '#78716c'}
+            $themeColor={themeColor || '#78716c'}
             onClick={handleClick}
           >
             <MdLogout />
@@ -138,7 +138,7 @@ const Button = ({
       } else if (icon === 'add') {
         return (
           <StyledIconSidebarButton
-            themeColor={themeColor || '#78716c'}
+            $themeColor={themeColor || '#78716c'}
             onClick={handleClick}
           >
             <BsPlusLg />
@@ -147,7 +147,7 @@ const Button = ({
       } else if (icon === 'dark') {
         return (
           <StyledIconSidebarButton
-            themeColor={themeColor || '#78716c'}
+            $themeColor={themeColor || '#78716c'}
             onClick={handleClick}
           >
             <MdDarkMode />
@@ -156,7 +156,7 @@ const Button = ({
       } else if (icon === 'light') {
         return (
           <StyledIconSidebarButton
-            themeColor={themeColor || '#78716c'}
+            $themeColor={themeColor || '#78716c'}
             onClick={handleClick}
           >
             <BsSun />

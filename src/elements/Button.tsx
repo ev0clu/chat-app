@@ -1,8 +1,8 @@
 import React from 'react';
 
 import styled from 'styled-components';
-import { MdSend } from 'react-icons/md';
-import { BsEmojiSmileFill } from 'react-icons/bs';
+import { MdSend, MdLogout, MdDarkMode } from 'react-icons/md';
+import { BsEmojiSmileFill, BsSun, BsPlusLg } from 'react-icons/bs';
 
 const StyledNormalButton = styled.button`
   display: flex;
@@ -40,14 +40,14 @@ const StyledNormalButton = styled.button`
   }
 `;
 
-const StyledIconButton = styled.button`
+const StyledIconMsgButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: transparent;
   border-radius: 50%;
   border-style: none;
-  color: #3b82f6;
+  color: #0ea5e9;
   cursor: pointer;
   font-size: 2.2rem;
   font-weight: 700;
@@ -57,7 +57,39 @@ const StyledIconButton = styled.button`
   text-decoration: none;
 
   &:hover {
-    color: #1d4ed8;
+    color: #0284c7;
+  }
+
+  &:active {
+    opacity: 0.7;
+  }
+`;
+
+interface StyledIconSidebarButton {
+  themeColor: string;
+}
+
+const StyledIconSidebarButton = styled.button<StyledIconSidebarButton>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border-radius: 50%;
+  border-style: none;
+  color: ${(props) =>
+    props.themeColor === 'dark' ? '#78716c' : '#fff'};
+  cursor: pointer;
+  font-size: 2.2rem;
+  font-weight: 700;
+  height: 4rem;
+  width: 4rem;
+  outline: none;
+  text-decoration: none;
+
+  &:hover {
+    background-color: ${(props) =>
+      props.themeColor === 'dark' ? '#e7e5e4' : '#a8a29e'};
+    cursor: pointer;
   }
 
   &:active {
@@ -68,24 +100,67 @@ const StyledIconButton = styled.button`
 interface Props {
   isIcon: boolean;
   icon?: string;
+  themeColor?: string;
   text?: string;
   handleClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const Button = ({ isIcon, icon, text, handleClick }: Props) => {
+const Button = ({
+  isIcon,
+  icon,
+  themeColor,
+  text,
+  handleClick
+}: Props) => {
   const renderButton = () => {
     if (isIcon) {
       if (icon === 'send') {
         return (
-          <StyledIconButton onClick={handleClick}>
+          <StyledIconMsgButton onClick={handleClick}>
             <MdSend />
-          </StyledIconButton>
+          </StyledIconMsgButton>
         );
       } else if (icon === 'emoji') {
         return (
-          <StyledIconButton onClick={handleClick}>
+          <StyledIconMsgButton onClick={handleClick}>
             <BsEmojiSmileFill />
-          </StyledIconButton>
+          </StyledIconMsgButton>
+        );
+      } else if (icon === 'log-out') {
+        return (
+          <StyledIconSidebarButton
+            themeColor={themeColor || '#78716c'}
+            onClick={handleClick}
+          >
+            <MdLogout />
+          </StyledIconSidebarButton>
+        );
+      } else if (icon === 'add') {
+        return (
+          <StyledIconSidebarButton
+            themeColor={themeColor || '#78716c'}
+            onClick={handleClick}
+          >
+            <BsPlusLg />
+          </StyledIconSidebarButton>
+        );
+      } else if (icon === 'dark') {
+        return (
+          <StyledIconSidebarButton
+            themeColor={themeColor || '#78716c'}
+            onClick={handleClick}
+          >
+            <MdDarkMode />
+          </StyledIconSidebarButton>
+        );
+      } else if (icon === 'light') {
+        return (
+          <StyledIconSidebarButton
+            themeColor={themeColor || '#78716c'}
+            onClick={handleClick}
+          >
+            <BsSun />
+          </StyledIconSidebarButton>
         );
       }
     } else {

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+import { useState } from 'react';
 import EmojiPicker from 'emoji-picker-react';
 import Input from '../elements/Input';
 import Button from '../elements/Button';
@@ -14,14 +14,24 @@ const Wrapper = styled.div`
   padding: 1rem;
 `;
 
-const Messages = () => {
+interface Props {
+  inputValue: string;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSend: (e: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
+const InputWrapper = ({
+  inputValue,
+  handleChange,
+  handleSend
+}: Props) => {
   return (
     <Wrapper>
       <Button isIcon={true} icon="emoji" />
-      <Input />
-      <Button isIcon={true} icon="send" />
+      <Input value={inputValue} handleChange={handleChange} />
+      <Button isIcon={true} icon="send" handleClick={handleSend} />
     </Wrapper>
   );
 };
 
-export default Messages;
+export default InputWrapper;

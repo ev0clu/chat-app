@@ -10,7 +10,7 @@ const Wrapper = styled.header`
   padding: 1rem;
 `;
 
-const StyledLogo = styled.div`
+const StyledChatLogo = styled.div`
   grid-row: 1/3;
   display: flex;
   justify-content: center;
@@ -40,7 +40,7 @@ const Paragraph = styled.p`
 const Header = () => {
   return (
     <Wrapper>
-      <StyledLogo>PC</StyledLogo>
+      <StyledChatLogo>PC</StyledChatLogo>
       <Title>Public Chat</Title>
       <Paragraph>Last message at 14/05 16:27</Paragraph>
     </Wrapper>

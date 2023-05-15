@@ -3,10 +3,16 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Button from '../elements/Button';
 
-const Wrapper = styled.div`
+interface WrapperProps {
+  themeColor: string;
+}
+
+const Wrapper = styled.div<WrapperProps>`
   grid-column: 1/2;
   grid-row: 1/4;
-  border-right: 1px solid #d4d4d4;
+  border-right: 1px solid
+    ${(props) =>
+      props.themeColor === 'dark' ? '#d4d4d4' : '#78716c'};
   padding: 1rem;
 `;
 
@@ -48,7 +54,7 @@ interface Props {
 
 const Sidebar = ({ userPic, themeIcon, handleThemeClick }: Props) => {
   return (
-    <Wrapper>
+    <Wrapper themeColor={themeIcon === 'dark' ? 'dark' : 'light'}>
       <StyledSectionTop>
         <StyledUserPic backgroundImage={userPic}></StyledUserPic>
         <ButtonWrapper>

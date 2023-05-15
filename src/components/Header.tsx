@@ -6,7 +6,6 @@ const Wrapper = styled.header`
   display: grid;
   grid-template-columns: auto 1fr;
   grid-column-gap: 1rem;
-  border-bottom: 1px solid #d4d4d4;
   padding: 1rem;
 `;
 

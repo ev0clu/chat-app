@@ -124,7 +124,7 @@ const Chat = () => {
           handleThemeClick={handleThemeClick}
         />
         <Header />
-        <MessageWrapper />
+        <MessageWrapper themeIcon={themeIcon} />
         <InputWrapper />
       </Wrapper>
     </ThemeProvider>

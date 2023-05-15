@@ -17,8 +17,8 @@ const StyledInput = styled.input`
 `;
 
 interface InputProps {
-  value?: string;
-  handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value: string;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input = ({ value, handleChange }: InputProps) => {

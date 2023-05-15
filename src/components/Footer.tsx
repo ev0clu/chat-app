@@ -7,6 +7,7 @@ const FooterWrapper = styled.footer`
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+  background-color: #f5f5f4;
 `;
 
 const StyledRefLink = styled.a`

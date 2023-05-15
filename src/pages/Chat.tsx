@@ -7,15 +7,28 @@ import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import {
   getFirestore,
   collection,
-  getDocs,
-  deleteDoc,
+  addDoc,
   query,
-  where,
+  orderBy,
+  limit,
   onSnapshot,
   setDoc,
   updateDoc,
-  doc
+  doc,
+  serverTimestamp
 } from 'firebase/firestore';
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL
+} from 'firebase/storage';
+import {
+  getMessaging,
+  getToken,
+  onMessage
+} from 'firebase/messaging';
+import { getPerformance } from 'firebase/performance';
 
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
@@ -23,7 +36,7 @@ import MessageWrapper from '../components/MessageWrapper';
 import InputWrapper from '../components/InputWrapper';
 
 interface WrapperProps {
-  color: string;
+  $themeColor: string;
 }
 
 const Wrapper = styled.div<WrapperProps>`
@@ -32,9 +45,11 @@ const Wrapper = styled.div<WrapperProps>`
   grid-template-columns: 1fr 3fr;
   grid-template-rows: auto 1fr auto;
   color: ${(props) =>
-    props.color === 'light' ? lightTheme.color : darkTheme.color};
+    props.$themeColor === 'light'
+      ? lightTheme.color
+      : darkTheme.color};
   background-color: ${(props) =>
-    props.color === 'light'
+    props.$themeColor === 'light'
       ? lightTheme.background
       : darkTheme.background};
 `;
@@ -52,11 +67,22 @@ const Chat = () => {
   const [userPic, setUserPic] = useState('');
   const [userName, setUserName] = useState('');
   const [theme, setTheme] = useState('light');
+  const [inputValue, setInputValue] = useState('');
+  const [message, setMessage] = useState({
+    id: '',
+    timestamp: '',
+    name: '',
+    text: ''
+  });
 
   useEffect(() => {
     initFirebaseAuth();
     restoreTheme();
   }, []);
+
+  useEffect(() => {
+    loadMessages();
+  }, [message]);
 
   const saveTheme = (data: string) => {
     localStorage.setItem('data-theme', JSON.stringify(data));
@@ -64,8 +90,8 @@ const Chat = () => {
 
   const restoreTheme = () => {
     const themeData = localStorage.getItem('data-theme');
-    console.log(themeData);
     let data: string = '';
+
     if (themeData === null) {
       data = 'light';
     } else {
@@ -132,17 +158,69 @@ const Chat = () => {
     saveTheme(data);
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleSend = (e: React.MouseEvent<HTMLButtonElement>) => {
+    saveMessage(inputValue);
+  };
+
+  const saveMessage = async (messageText: string) => {
+    // Add a new message entry to the Firebase database.
+    try {
+      await addDoc(collection(getFirestore(), 'messages'), {
+        name: getUserName(),
+        text: messageText,
+        timestamp: serverTimestamp()
+      });
+      setInputValue('');
+    } catch (error) {
+      console.error(
+        'Error writing new message to Firebase Database',
+        error
+      );
+    }
+  };
+
+  // Loads chat messages history and listens for upcoming ones.
+  const loadMessages = () => {
+    // Create the query to load the last 12 messages and listen for new ones.
+    const recentMessagesQuery = query(
+      collection(getFirestore(), 'messages'),
+      orderBy('timestamp', 'desc'),
+      limit(12)
+    );
+
+    // Start listening to the query.
+    onSnapshot(recentMessagesQuery, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        const messageData = change.doc.data();
+        setMessage({
+          id: change.doc.id,
+          timestamp: messageData.timestamp,
+          name: messageData.name,
+          text: messageData.text
+        });
+      });
+    });
+  };
+
   return (
     <ThemeContext.Provider value={theme}>
-      <Wrapper color={theme}>
+      <Wrapper $themeColor={theme}>
         <Sidebar
           userPic={userPic}
           handleThemeClick={handleThemeClick}
           signOutUser={signOutUser}
         />
         <Header />
-        <MessageWrapper />
-        <InputWrapper />
+        <MessageWrapper message={message} />
+        <InputWrapper
+          inputValue={inputValue}
+          handleChange={handleChange}
+          handleSend={handleSend}
+        />
       </Wrapper>
     </ThemeContext.Provider>
   );

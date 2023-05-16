@@ -1,15 +1,23 @@
 import React from 'react';
 
 import styled from 'styled-components';
+import gLogo from '../assets/google_logo.svg';
+
 import { MdSend, MdLogout, MdDarkMode } from 'react-icons/md';
 import { BsEmojiSmileFill, BsSun, BsPlusLg } from 'react-icons/bs';
 
-const StyledNormalButton = styled.button`
+const StyledImg = styled.img`
+  height: 50px;
+  width: 50px;
+  background-color: #fff;
+  border: 1px solid #2f80ed;
+`;
+
+const StyledLoginButton = styled.button`
   display: flex;
-  justify-content: center;
   align-items: center;
+  gap: 20px;
   background-color: #2f80ed;
-  border-radius: 5px;
   border-style: none;
   color: #fff;
   cursor: pointer;
@@ -18,17 +26,16 @@ const StyledNormalButton = styled.button`
   height: 50px;
   outline: none;
   overflow: hidden;
-  padding: 30px 50px;
-  text-align: center;
   text-decoration: none;
   transition: all 0.3s;
+  padding-right: 20px;
 
   &:hover {
     background-color: #1366d6;
     box-shadow: rgba(0, 0, 0, 0.05) 0 5px 30px,
       rgba(0, 0, 0, 0.05) 0 1px 4px;
-    opacity: 1;
     transform: translateY(0);
+    opacity: 0.95;
     transition-duration: 0.35s;
   }
 
@@ -165,9 +172,10 @@ const Button = ({
       }
     } else {
       return (
-        <StyledNormalButton onClick={handleClick}>
+        <StyledLoginButton onClick={handleClick}>
+          <StyledImg src={gLogo} alt="google-logo" />
           {text}
-        </StyledNormalButton>
+        </StyledLoginButton>
       );
     }
   };

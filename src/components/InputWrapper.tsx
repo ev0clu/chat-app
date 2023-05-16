@@ -39,15 +39,16 @@ const InputWrapper = () => {
   const handleSendButton = (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
-    if (e.currentTarget.value !== '') {
+    e.preventDefault;
+    if (inputValue !== '') {
       saveMessage(inputValue);
     }
   };
 
-  const handleInputKeyPress = (
+  const handleInputKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    if (e.key === 'Enter' && e.currentTarget.value !== '') {
+    if (e.key === 'Enter' && inputValue !== '') {
       saveMessage(inputValue);
     }
   };
@@ -75,7 +76,7 @@ const InputWrapper = () => {
       <Input
         value={inputValue}
         handleChange={handleInputChange}
-        handleKeyPress={handleInputKeyPress}
+        handleInputKeyDown={handleInputKeyDown}
       />
       <Button
         isIcon={true}

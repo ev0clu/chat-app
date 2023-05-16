@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import '../firebase-config';
+
 import {
   getAuth,
   GoogleAuthProvider,

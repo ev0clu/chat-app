@@ -1,6 +1,9 @@
 import styled from 'styled-components';
+
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+
 import ThemeContext from './ThemeContext';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../elements/Button';
 
@@ -49,17 +52,53 @@ const ButtonWrapper = styled.div`
 `;
 
 interface Props {
-  userPic: string;
   handleThemeClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  signOutUser: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const Sidebar = ({
-  userPic,
-  handleThemeClick,
-  signOutUser
-}: Props) => {
+const Sidebar = ({ handleThemeClick }: Props) => {
   const theme = useContext(ThemeContext);
+  const [userPic, setUserPic] = useState('');
+
+  useEffect(() => {
+    initFirebaseAuth();
+  }, []);
+
+  const signOutUser = () => {
+    signOut(getAuth());
+  };
+
+  const getProfilePicUrl = () => {
+    return (
+      getAuth().currentUser?.photoURL || 'profile_placeholder.png'
+    );
+  };
+
+  const addSizeToGoogleProfilePic = (url: string) => {
+    if (
+      url.indexOf('googleusercontent.com') !== -1 &&
+      url.indexOf('?') === -1
+    ) {
+      return url + '?sz=150';
+    }
+    return url;
+  };
+
+  // Triggers when the auth state change for instance when the user signs-in or signs-out.
+  const authStateObserver = () => {
+    // User is signed in!
+    // Get the signed-in user's profile pic and name.
+    const profilePicUrl = getProfilePicUrl();
+
+    // Set the user's profile pic and name.
+    setUserPic(
+      'url(' + addSizeToGoogleProfilePic(profilePicUrl) + ')'
+    );
+  };
+
+  const initFirebaseAuth = () => {
+    onAuthStateChanged(getAuth(), authStateObserver);
+  };
+
   return (
     <Wrapper $themeColor={theme === 'light' ? 'dark' : 'light'}>
       <StyledSectionTop>

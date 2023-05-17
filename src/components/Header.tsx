@@ -36,12 +36,29 @@ const Paragraph = styled.p`
   color: #a3a3a3;
 `;
 
-const Header = () => {
+interface Props {
+  message: {
+    id: string;
+    name: string;
+    text: string;
+    timestamp: {
+      seconds: number;
+      nanoseconds: number;
+    };
+  }[];
+}
+
+const Header = ({ message }: Props) => {
   return (
     <Wrapper>
       <StyledChatLogo>PC</StyledChatLogo>
       <Title>Public Chat</Title>
-      <Paragraph>Last message at 14/05 16:27</Paragraph>
+      <Paragraph>
+        Last message at{' '}
+        {new Date(
+          message[message.length - 1].timestamp.seconds * 1000
+        ).toString()}
+      </Paragraph>
     </Wrapper>
   );
 };

@@ -28,7 +28,6 @@ import {
   getToken,
   onMessage
 } from 'firebase/messaging';
-import { getPerformance } from 'firebase/performance';
 
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
@@ -39,10 +38,39 @@ interface WrapperProps {
   $themeColor: string;
 }
 
+interface DotProps {
+  $delay: string;
+}
+
+const LoadingWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Dot = styled.div<DotProps>`
+  width: 16px;
+  height: 16px;
+  margin: 3px 6px;
+  border-radius: 50%;
+  background-color: #2f80ed;
+  opacity: 1;
+  animation: bouncing-loader 0.6s infinite alternate;
+  animation-delay: ${(props) => props.$delay};
+
+  @keyframes bouncing-loader {
+    to {
+      opacity: 0.1;
+      transform: translateY(-16px);
+    }
+  }
+`;
+
 const Wrapper = styled.div<WrapperProps>`
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 3fr;
+  grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr auto;
   color: ${(props) =>
     props.$themeColor === 'light'
@@ -58,31 +86,59 @@ const lightTheme = {
   background: '#fff',
   color: '#222'
 };
+
 const darkTheme = {
   background: '#27272a',
   color: '#fff'
 };
 
+interface MessagesProps {
+  id: string;
+  name: string;
+  text: string;
+  timestamp: {
+    nanoseconds: number;
+    seconds: number;
+  };
+  uid: string;
+}
+
 const Chat = () => {
-  const [userPic, setUserPic] = useState('');
   const [userName, setUserName] = useState('');
   const [theme, setTheme] = useState('light');
-  const [inputValue, setInputValue] = useState('');
-  const [message, setMessage] = useState({
-    id: '',
-    timestamp: '',
-    name: '',
-    text: ''
-  });
+  const [message, setMessage] = useState<MessagesProps[]>([]);
 
   useEffect(() => {
-    initFirebaseAuth();
     restoreTheme();
   }, []);
 
   useEffect(() => {
-    loadMessages();
-  }, [message]);
+    // Loads chat messages history and listens for upcoming ones.
+    // Create the query to load the last 12 messages and listen for new ones.
+    const recentMessagesQuery = query(
+      collection(getFirestore(), 'messages'),
+      orderBy('timestamp', 'desc'),
+      limit(12)
+    );
+
+    // Start listening to the query.
+    const unsubscribe = onSnapshot(
+      recentMessagesQuery,
+      (snapshot) => {
+        const messages: MessagesProps[] = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data() as MessagesProps; // Assert the data type to MessageData
+          messages.push({ ...data, id: doc.id });
+        });
+        console.log(messages);
+        setMessage(messages);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const saveTheme = (data: string) => {
     localStorage.setItem('data-theme', JSON.stringify(data));
@@ -101,128 +157,31 @@ const Chat = () => {
     saveTheme(data);
   };
 
-  const signOutUser = () => {
-    signOut(getAuth());
-  };
-
-  const isUserSignedIn = () => {
-    return !!getAuth().currentUser;
-  };
-
-  const getUserId = () => {
-    return getAuth().currentUser?.uid;
-  };
-
-  const getProfilePicUrl = () => {
-    return (
-      getAuth().currentUser?.photoURL || 'profile_placeholder.png'
-    );
-  };
-
-  const getUserName = () => {
-    return getAuth().currentUser?.displayName;
-  };
-
-  const addSizeToGoogleProfilePic = (url: string) => {
-    if (
-      url.indexOf('googleusercontent.com') !== -1 &&
-      url.indexOf('?') === -1
-    ) {
-      return url + '?sz=150';
-    }
-    return url;
-  };
-
-  // Triggers when the auth state change for instance when the user signs-in or signs-out.
-  const authStateObserver = () => {
-    //restoreFirebase();
-    // User is signed in!
-    // Get the signed-in user's profile pic and name.
-    const profilePicUrl = getProfilePicUrl();
-    const userName = getUserName() || '';
-
-    // Set the user's profile pic and name.
-    setUserPic(
-      'url(' + addSizeToGoogleProfilePic(profilePicUrl) + ')'
-    );
-    setUserName(userName);
-  };
-
-  const initFirebaseAuth = () => {
-    onAuthStateChanged(getAuth(), authStateObserver);
-  };
-
   const handleThemeClick = () => {
     const data: string = theme === 'light' ? 'dark' : 'light';
     setTheme(data);
     saveTheme(data);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleSend = (e: React.MouseEvent<HTMLButtonElement>) => {
-    saveMessage(inputValue);
-  };
-
-  const saveMessage = async (messageText: string) => {
-    // Add a new message entry to the Firebase database.
-    try {
-      await addDoc(collection(getFirestore(), 'messages'), {
-        name: getUserName(),
-        text: messageText,
-        timestamp: serverTimestamp()
-      });
-      setInputValue('');
-    } catch (error) {
-      console.error(
-        'Error writing new message to Firebase Database',
-        error
-      );
-    }
-  };
-
-  // Loads chat messages history and listens for upcoming ones.
-  const loadMessages = () => {
-    // Create the query to load the last 12 messages and listen for new ones.
-    const recentMessagesQuery = query(
-      collection(getFirestore(), 'messages'),
-      orderBy('timestamp', 'desc'),
-      limit(12)
-    );
-
-    // Start listening to the query.
-    onSnapshot(recentMessagesQuery, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        const messageData = change.doc.data();
-        setMessage({
-          id: change.doc.id,
-          timestamp: messageData.timestamp,
-          name: messageData.name,
-          text: messageData.text
-        });
-      });
-    });
-  };
-
   return (
-    <ThemeContext.Provider value={theme}>
-      <Wrapper $themeColor={theme}>
-        <Sidebar
-          userPic={userPic}
-          handleThemeClick={handleThemeClick}
-          signOutUser={signOutUser}
-        />
-        <Header />
-        <MessageWrapper message={message} />
-        <InputWrapper
-          inputValue={inputValue}
-          handleChange={handleChange}
-          handleSend={handleSend}
-        />
-      </Wrapper>
-    </ThemeContext.Provider>
+    <>
+      {message.length === 0 ? (
+        <LoadingWrapper>
+          <Dot $delay="0"></Dot>
+          <Dot $delay="0.2s"></Dot>
+          <Dot $delay="0.4s"></Dot>
+        </LoadingWrapper>
+      ) : (
+        <ThemeContext.Provider value={theme}>
+          <Wrapper $themeColor={theme}>
+            <Sidebar handleThemeClick={handleThemeClick} />
+            <Header message={message} />
+            <MessageWrapper message={message} />
+            <InputWrapper />
+          </Wrapper>
+        </ThemeContext.Provider>
+      )}
+    </>
   );
 };
 

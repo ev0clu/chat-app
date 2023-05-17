@@ -26,6 +26,10 @@ const Wrapper = styled.div`
 const InputWrapper = () => {
   const [inputValue, setInputValue] = useState('');
 
+  const getUserId = () => {
+    return getAuth().currentUser?.uid;
+  };
+
   const getUserName = () => {
     return getAuth().currentUser?.displayName;
   };
@@ -60,7 +64,8 @@ const InputWrapper = () => {
       await addDoc(collection(getFirestore(), 'messages'), {
         name: getUserName(),
         text: messageText,
-        timestamp: serverTimestamp()
+        timestamp: serverTimestamp(),
+        uid: getUserId()
       });
     } catch (error) {
       console.error(

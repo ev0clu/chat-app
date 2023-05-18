@@ -45,6 +45,7 @@ interface Props {
       seconds: number;
       nanoseconds: number;
     };
+    uid: string;
   }[];
 }
 

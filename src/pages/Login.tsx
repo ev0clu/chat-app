@@ -35,8 +35,8 @@ const Wrapper = styled.div`
 
 const Login = () => {
   const navigate = useNavigate();
-  // Firebase Auth.
 
+  // Firebase Auth.
   const signIn = async () => {
     // Add a new entry to the Firebase database.
     try {

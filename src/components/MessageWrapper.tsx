@@ -67,9 +67,10 @@ interface Props {
     uid: string;
   }[];
   scroll: RefObject<HTMLDivElement>;
+  userId: string;
 }
 
-const Messages = ({ message, scroll }: Props) => {
+const Messages = ({ message, scroll, userId }: Props) => {
   const theme = useContext(ThemeContext);
 
   return (
@@ -78,11 +79,7 @@ const Messages = ({ message, scroll }: Props) => {
       {message.map((messageData) => (
         <MessageWrapper
           key={messageData.id}
-          $orientation={
-            messageData.uid === getAuth().currentUser?.uid
-              ? 'right'
-              : 'left'
-          }
+          $orientation={messageData.uid === userId ? 'right' : 'left'}
         >
           <StyledMessageBubble>
             <StyledName>{messageData.name}</StyledName>

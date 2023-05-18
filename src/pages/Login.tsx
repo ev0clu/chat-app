@@ -41,8 +41,9 @@ const Login = () => {
     // Add a new entry to the Firebase database.
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(getAuth(), provider);
-      navigate('/chat');
+      const { user } = await signInWithPopup(getAuth(), provider);
+      if (!user) return;
+      navigate('/chat', { state: { userId: user.uid } });
     } catch (error) {
       console.error(
         'Error log in with Google Authentication. Please check you entered the correct email address and password.',

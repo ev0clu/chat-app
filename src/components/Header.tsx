@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { format } from 'date-fns';
+import { useEffect, useState } from 'react';
 
 const Wrapper = styled.header`
   grid-column: 2/3;
@@ -50,16 +52,22 @@ interface Props {
 }
 
 const Header = ({ message }: Props) => {
+  const [time, setTime] = useState('');
+
+  useEffect(() => {
+    setTime(
+      format(
+        new Date(message[0].timestamp.seconds * 1000),
+        'dd/MM HH:mm'
+      )
+    );
+  }, []);
+
   return (
     <Wrapper>
       <StyledChatLogo>PC</StyledChatLogo>
       <Title>Public Chat</Title>
-      <Paragraph>
-        Last message at{' '}
-        {new Date(
-          message[message.length - 1].timestamp.seconds * 1000
-        ).toString()}
-      </Paragraph>
+      <Paragraph>Last message at {time}</Paragraph>
     </Wrapper>
   );
 };

@@ -34,20 +34,16 @@ import Sidebar from '../components/Sidebar';
 import MessageWrapper from '../components/MessageWrapper';
 import InputWrapper from '../components/InputWrapper';
 
-interface WrapperProps {
-  $themeColor: string;
-}
-
-interface DotProps {
-  $delay: string;
-}
-
 const LoadingWrapper = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
+
+interface DotProps {
+  $delay: string;
+}
 
 const Dot = styled.div<DotProps>`
   width: 16px;
@@ -67,6 +63,10 @@ const Dot = styled.div<DotProps>`
   }
 `;
 
+interface WrapperProps {
+  $themeColor: string;
+}
+
 const Wrapper = styled.div<WrapperProps>`
   flex: 1;
   display: grid;
@@ -80,6 +80,7 @@ const Wrapper = styled.div<WrapperProps>`
     props.$themeColor === 'light'
       ? lightTheme.background
       : darkTheme.background};
+  max-height: 100vh;
 `;
 
 const lightTheme = {
@@ -130,7 +131,6 @@ const Chat = () => {
           const data = doc.data() as MessagesProps; // Assert the data type to MessageData
           messages.push({ ...data, id: doc.id });
         });
-        console.log(messages);
         setMessage(messages);
       }
     );

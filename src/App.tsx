@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Chat from './pages/Chat';

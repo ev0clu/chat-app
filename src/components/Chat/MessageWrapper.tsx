@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import ThemeContext from './ThemeContext';
+import ThemeContext from '../../helper/ThemeContext';
 import { useContext, RefObject } from 'react';
 import { getAuth } from 'firebase/auth';
 

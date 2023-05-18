@@ -2,10 +2,10 @@ import styled from 'styled-components';
 
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
-import ThemeContext from './ThemeContext';
+import ThemeContext from '../../helper/ThemeContext';
 import { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Button from '../elements/Button';
+import Button from '../../elements/Button';
 
 interface WrapperProps {
   $themeColor: string;

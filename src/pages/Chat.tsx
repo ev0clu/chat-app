@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import ThemeContext from '../components/ThemeContext';
+import ThemeContext from '../helper/ThemeContext';
 
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import {
@@ -30,10 +30,10 @@ import {
   onMessage
 } from 'firebase/messaging';
 
-import Header from '../components/Header';
-import Sidebar from '../components/Sidebar';
-import MessageWrapper from '../components/MessageWrapper';
-import InputWrapper from '../components/InputWrapper';
+import Header from '../components/Chat/Header';
+import Sidebar from '../components/Chat/Sidebar';
+import MessageWrapper from '../components/Chat/MessageWrapper';
+import InputWrapper from '../components/Chat/InputWrapper';
 
 const LoadingWrapper = styled.div`
   flex: 1;

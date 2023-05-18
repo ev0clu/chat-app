@@ -13,8 +13,8 @@ import EmojiPicker, {
   EmojiClickData,
   EmojiStyle
 } from 'emoji-picker-react';
-import Input from '../elements/Input';
-import Button from '../elements/Button';
+import Input from '../../elements/Input';
+import Button from '../../elements/Button';
 
 const Wrapper = styled.div`
   grid-column: 2/3;

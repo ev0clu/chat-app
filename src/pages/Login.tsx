@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import '../firebase-config';
+import '../helper/firebase-config';
 
 import {
   getAuth,
@@ -8,7 +8,7 @@ import {
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
-import Footer from '../components/Footer';
+import Footer from '../components/Login/Footer';
 import Button from '../elements/Button';
 
 const Main = styled.main`

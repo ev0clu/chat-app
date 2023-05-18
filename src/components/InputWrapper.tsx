@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, RefObject } from 'react';
+import { useState, useEffect, RefObject, useRef } from 'react';
 
 import { getAuth } from 'firebase/auth';
 import {
@@ -9,7 +9,10 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 
-import EmojiPicker from 'emoji-picker-react';
+import EmojiPicker, {
+  EmojiClickData,
+  EmojiStyle
+} from 'emoji-picker-react';
 import Input from '../elements/Input';
 import Button from '../elements/Button';
 
@@ -21,6 +24,13 @@ const Wrapper = styled.div`
   align-items: center;
   grid-column-gap: 1rem;
   padding: 1rem;
+  position: relative;
+`;
+
+const EmojiWrapper = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
 `;
 
 interface InputWrapperProps {
@@ -29,6 +39,26 @@ interface InputWrapperProps {
 
 const InputWrapper = ({ scroll }: InputWrapperProps) => {
   const [inputValue, setInputValue] = useState('');
+  const [isEmoji, setIsEmoji] = useState(false);
+  const popupRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        // Clicked outside the popup, close it
+        setIsEmoji(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const getUserId = () => {
     return getAuth().currentUser?.uid;
@@ -61,6 +91,22 @@ const InputWrapper = ({ scroll }: InputWrapperProps) => {
     }
   };
 
+  const handleEmojiButton = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault;
+    setIsEmoji(true);
+  };
+
+  const handleEmojiClick = (
+    emojiData: EmojiClickData,
+    event: MouseEvent
+  ) => {
+    event.preventDefault;
+    setIsEmoji(false);
+    setInputValue((prevInput) => prevInput + emojiData.emoji);
+  };
+
   const saveMessage = async (messageText: string) => {
     // Add a new message entry to the Firebase database.
     try {
@@ -82,7 +128,21 @@ const InputWrapper = ({ scroll }: InputWrapperProps) => {
 
   return (
     <Wrapper>
-      <Button isIcon={true} icon="emoji" />
+      {isEmoji ? (
+        <EmojiWrapper ref={popupRef}>
+          <EmojiPicker
+            onEmojiClick={handleEmojiClick}
+            emojiStyle={EmojiStyle.NATIVE}
+          />
+        </EmojiWrapper>
+      ) : (
+        ''
+      )}
+      <Button
+        isIcon={true}
+        icon="emoji"
+        handleClick={handleEmojiButton}
+      />
       <Input
         value={inputValue}
         handleChange={handleInputChange}

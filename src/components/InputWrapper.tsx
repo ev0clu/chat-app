@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, RefObject } from 'react';
 
 import { getAuth } from 'firebase/auth';
 import {
@@ -23,7 +23,11 @@ const Wrapper = styled.div`
   padding: 1rem;
 `;
 
-const InputWrapper = () => {
+interface InputWrapperProps {
+  scroll: RefObject<HTMLDivElement>;
+}
+
+const InputWrapper = ({ scroll }: InputWrapperProps) => {
   const [inputValue, setInputValue] = useState('');
 
   const getUserId = () => {
@@ -67,6 +71,7 @@ const InputWrapper = () => {
         timestamp: serverTimestamp(),
         uid: getUserId()
       });
+      scroll.current?.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
       console.error(
         'Error writing new message to Firebase Database',

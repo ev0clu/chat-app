@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import ThemeContext from './ThemeContext';
-import { useContext } from 'react';
+import { useContext, RefObject } from 'react';
 import { getAuth } from 'firebase/auth';
 
 interface WrapperProps {
@@ -66,13 +66,15 @@ interface Props {
     };
     uid: string;
   }[];
+  scroll: RefObject<HTMLDivElement>;
 }
 
-const Messages = ({ message }: Props) => {
+const Messages = ({ message, scroll }: Props) => {
   const theme = useContext(ThemeContext);
 
   return (
     <Wrapper $themeColor={theme === 'light' ? 'dark' : 'light'}>
+      <span ref={scroll}></span>
       {message.map((messageData) => (
         <MessageWrapper
           key={messageData.id}

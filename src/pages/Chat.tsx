@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import ThemeContext from '../components/ThemeContext';
 
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
@@ -108,6 +108,7 @@ const Chat = () => {
   const [userName, setUserName] = useState('');
   const [theme, setTheme] = useState('light');
   const [message, setMessage] = useState<MessagesProps[]>([]);
+  const scroll = useRef(null);
 
   useEffect(() => {
     restoreTheme();
@@ -176,8 +177,8 @@ const Chat = () => {
           <Wrapper $themeColor={theme}>
             <Sidebar handleThemeClick={handleThemeClick} />
             <Header message={message} />
-            <MessageWrapper message={message} />
-            <InputWrapper />
+            <MessageWrapper message={message} scroll={scroll} />
+            <InputWrapper scroll={scroll} />
           </Wrapper>
         </ThemeContext.Provider>
       )}

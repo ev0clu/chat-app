@@ -18,21 +18,23 @@ const StyledInput = styled.input`
 
 interface InputProps {
   value: string;
+  placeholder: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleInputKeyDown: (
+  handleInputKeyDown?: (
     e: React.KeyboardEvent<HTMLInputElement>
   ) => void;
 }
 
 const Input = ({
   value,
+  placeholder,
   handleChange,
   handleInputKeyDown
 }: InputProps) => {
   return (
     <StyledInput
       type="text"
-      placeholder="Aa"
+      placeholder={placeholder}
       value={value}
       onChange={handleChange}
       onKeyDown={handleInputKeyDown}

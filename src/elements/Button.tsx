@@ -13,7 +13,7 @@ const StyledImg = styled.img`
   border: 1px solid #2f80ed;
 `;
 
-const StyledLoginButton = styled.button`
+const StyledNormalButton = styled.button`
   display: flex;
   align-items: center;
   gap: 20px;
@@ -105,7 +105,7 @@ const StyledIconSidebarButton = styled.button<StyledIconSidebarButton>`
 `;
 
 interface Props {
-  isIcon: boolean;
+  buttonType: string;
   icon?: string;
   themeColor?: string;
   text?: string;
@@ -113,14 +113,14 @@ interface Props {
 }
 
 const Button = ({
-  isIcon,
+  buttonType,
   icon,
   themeColor,
   text,
   handleClick
 }: Props) => {
   const renderButton = () => {
-    if (isIcon) {
+    if (buttonType === 'icon') {
       if (icon === 'send') {
         return (
           <StyledIconMsgButton onClick={handleClick}>
@@ -170,12 +170,18 @@ const Button = ({
           </StyledIconSidebarButton>
         );
       }
-    } else {
+    } else if (buttonType === 'login') {
       return (
-        <StyledLoginButton onClick={handleClick}>
+        <StyledNormalButton onClick={handleClick}>
           <StyledImg src={gLogo} alt="google-logo" />
           {text}
-        </StyledLoginButton>
+        </StyledNormalButton>
+      );
+    } else if (buttonType === 'new-chat') {
+      return (
+        <StyledNormalButton onClick={handleClick}>
+          {text}
+        </StyledNormalButton>
       );
     }
   };

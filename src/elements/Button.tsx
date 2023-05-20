@@ -16,6 +16,7 @@ const StyledImg = styled.img`
 const StyledNormalButton = styled.button`
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 20px;
   background-color: #2f80ed;
   border-style: none;
@@ -72,11 +73,11 @@ const StyledIconMsgButton = styled.button`
   }
 `;
 
-interface StyledIconSidebarButton {
+interface StyledIconSidebarButtonProps {
   $themeColor: string;
 }
 
-const StyledIconSidebarButton = styled.button<StyledIconSidebarButton>`
+const StyledIconSidebarButton = styled.button<StyledIconSidebarButtonProps>`
   display: flex;
   justify-content: center;
   align-items: center;

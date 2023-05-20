@@ -43,7 +43,9 @@ const Login = () => {
       const provider = new GoogleAuthProvider();
       const { user } = await signInWithPopup(getAuth(), provider);
       if (!user) return;
-      navigate('/chat', { state: { userId: user.uid } });
+      navigate('/chat', {
+        state: { userId: user.uid, userName: user.displayName }
+      });
     } catch (error) {
       console.error(
         'Error log in with Google Authentication. Please check you entered the correct email address and password.',

@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import ThemeContext from '../../helper/ThemeContext';
 import { useContext, RefObject } from 'react';
-import { getAuth } from 'firebase/auth';
 
 interface WrapperProps {
   $themeColor: string;
@@ -40,7 +39,7 @@ const StyledMessageBubble = styled.div`
   background: linear-gradient(-13deg, #106cce 49%, #2a4ab5 100%);
   color: #ffffff;
   border-radius: 1.3rem;
-  width: max-content;
+  max-width: 20rem;
   padding: 0.5rem 1.5rem;
   font-size: 1.1rem;
 `;

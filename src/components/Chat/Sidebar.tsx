@@ -19,7 +19,6 @@ import generateID from '../../helper/GenerateID';
 
 interface ThemeProps {
   $themeColor: string;
-  $isHover?: boolean;
 }
 
 const Wrapper = styled.div<ThemeProps>`
@@ -54,6 +53,7 @@ const BottomWrapper = styled.ul`
 const StyledChatBox = styled.li<ThemeProps>`
   display: flex;
   flex-direction: row;
+  width: 100%;
   gap: 1rem;
   text-decoration: none;
   padding: 1rem 2rem;
@@ -185,7 +185,6 @@ const Sidebar = ({
   const [userPic, setUserPic] = useState('');
   const [users, setUsers] = useState<UsersProps[]>([]);
   const [selectedUserId, setSelectedUserId] = useState('');
-  const [selectedUserHover, setSelectedUserHover] = useState(false);
   const [addModal, setAddModal] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [chats, setChats] = useState<ChatsProps[]>([]);
@@ -333,7 +332,6 @@ const Sidebar = ({
       saveChatBox(inputValue);
       setAddModal(false);
       setInputValue('');
-      setSelectedUserHover(false);
     }
   };
 
@@ -343,7 +341,6 @@ const Sidebar = ({
     e.preventDefault;
     const target = e.currentTarget.dataset.id;
     setSelectedUserId(target || '');
-    setSelectedUserHover(true);
   };
 
   return (

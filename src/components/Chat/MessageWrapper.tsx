@@ -56,7 +56,13 @@ const StyledText = styled.p`
 `;
 
 interface Props {
-  message: {
+  selectedChat: {
+    chatId: string;
+    chatName: string;
+    uidA: string;
+    uidB: string;
+  };
+  filteredMessages: {
     id: string;
     name: string;
     text: string;
@@ -65,28 +71,38 @@ interface Props {
       nanoseconds: number;
     };
     uid: string;
+    chatId: string;
   }[];
   scroll: RefObject<HTMLDivElement>;
   userId: string;
 }
 
-const Messages = ({ message, scroll, userId }: Props) => {
+const Messages = ({
+  selectedChat,
+  filteredMessages,
+  scroll,
+  userId
+}: Props) => {
   const theme = useContext(ThemeContext);
 
   return (
     <Wrapper $themeColor={theme === 'light' ? 'dark' : 'light'}>
       <span ref={scroll}></span>
-      {message.map((messageData) => (
-        <MessageWrapper
-          key={messageData.id}
-          $orientation={messageData.uid === userId ? 'right' : 'left'}
-        >
-          <StyledMessageBubble>
-            <StyledName>{messageData.name}</StyledName>
-            <StyledText>{messageData.text}</StyledText>
-          </StyledMessageBubble>
-        </MessageWrapper>
-      ))}
+      {filteredMessages.map((message) =>
+        message.chatId === selectedChat.chatId ? (
+          <MessageWrapper
+            key={message.id}
+            $orientation={message.uid === userId ? 'right' : 'left'}
+          >
+            <StyledMessageBubble>
+              <StyledName>{message.name}</StyledName>
+              <StyledText>{message.text}</StyledText>
+            </StyledMessageBubble>
+          </MessageWrapper>
+        ) : (
+          ''
+        )
+      )}
     </Wrapper>
   );
 };

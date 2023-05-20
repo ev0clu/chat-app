@@ -103,21 +103,68 @@ interface MessagesProps {
     seconds: number;
   };
   uid: string;
+  chatId: string;
+}
+
+interface ChatsProps {
+  chatId: string;
+  chatName: string;
+  uidA: string;
+  uidB: string;
+  timestamp: { seconds: number; nanoseconds: number };
+  id: string;
 }
 
 const Chat = () => {
-  const [userName, setUserName] = useState('');
   const [theme, setTheme] = useState('light');
-  const [message, setMessage] = useState<MessagesProps[]>([]);
+  const [selectedChat, setSelectedChat] = useState({
+    chatId: 'W969QPv7gOtsBhvQZEyHK1woZ',
+    chatName: 'Public Chat',
+    uidA: '',
+    uidB: '',
+    timestamp: { seconds: 1684569600, nanoseconds: 31000000 }
+  });
+  const [chat, setChat] = useState<ChatsProps[]>([]);
+  const [filteredMessages, setFilteredMessages] = useState<
+    MessagesProps[]
+  >([]);
+  const [messages, setMessages] = useState<MessagesProps[]>([]);
   const scroll = useRef(null);
   const location = useLocation();
-  const { userId } = location.state;
+  const { userId, userName } = location.state;
 
   useEffect(() => {
     restoreTheme();
   }, []);
 
   useEffect(() => {
+    const filteredData: MessagesProps[] = messages.filter(
+      (message) => message.chatId === selectedChat.chatId
+    );
+    setFilteredMessages(filteredData);
+  }, [selectedChat, messages]);
+
+  useEffect(() => {
+    // Loads chat messages history and listens for upcoming ones.
+    // Create the query to load the last 12 messages and listen for new ones.
+    const recentChatsQuery = query(
+      collection(getFirestore(), 'chats'),
+      orderBy('timestamp', 'desc')
+    );
+
+    // Start listening to the query.
+    const unsubscribeChats = onSnapshot(
+      recentChatsQuery,
+      (snapshot) => {
+        const chats: ChatsProps[] = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data() as ChatsProps; // Assert the data type to MessageData
+          chats.push({ ...data, id: doc.id });
+        });
+        setChat(chats);
+      }
+    );
+
     // Loads chat messages history and listens for upcoming ones.
     // Create the query to load the last 12 messages and listen for new ones.
     const recentMessagesQuery = query(
@@ -127,20 +174,21 @@ const Chat = () => {
     );
 
     // Start listening to the query.
-    const unsubscribe = onSnapshot(
+    const unsubscribeMessages = onSnapshot(
       recentMessagesQuery,
       (snapshot) => {
-        const messages: MessagesProps[] = [];
+        const messagesData: MessagesProps[] = [];
         snapshot.forEach((doc) => {
           const data = doc.data() as MessagesProps; // Assert the data type to MessageData
-          messages.push({ ...data, id: doc.id });
+          messagesData.push({ ...data, id: doc.id });
         });
-        setMessage(messages);
+        setMessages(messagesData);
       }
     );
 
     return () => {
-      unsubscribe();
+      unsubscribeChats();
+      unsubscribeMessages();
     };
   }, []);
 
@@ -167,9 +215,21 @@ const Chat = () => {
     saveTheme(data);
   };
 
+  const handleChatClick = (e: React.MouseEvent<HTMLLIElement>) => {
+    const id = e.currentTarget.dataset.name;
+    const index = chat.findIndex((element) => element.chatId === id);
+    setSelectedChat({
+      chatId: chat[index].chatId,
+      chatName: chat[index].chatName,
+      uidA: chat[index].uidA,
+      uidB: chat[index].uidB,
+      timestamp: chat[index].timestamp
+    });
+  };
+
   return (
     <>
-      {message.length === 0 ? (
+      {messages.length === 0 ? (
         <LoadingWrapper>
           <Dot $delay="0"></Dot>
           <Dot $delay="0.2s"></Dot>
@@ -178,14 +238,24 @@ const Chat = () => {
       ) : (
         <ThemeContext.Provider value={theme}>
           <Wrapper $themeColor={theme}>
-            <Sidebar handleThemeClick={handleThemeClick} />
-            <Header message={message} />
+            <Sidebar
+              userId={userId}
+              handleThemeClick={handleThemeClick}
+              handleChatClick={handleChatClick}
+            />
+            <Header selectedChat={selectedChat} messages={messages} />
             <MessageWrapper
-              message={message}
+              selectedChat={selectedChat}
+              filteredMessages={filteredMessages}
               scroll={scroll}
               userId={userId}
             />
-            <InputWrapper scroll={scroll} />
+            <InputWrapper
+              selectedChat={selectedChat}
+              scroll={scroll}
+              userId={userId}
+              userName={userName}
+            />
           </Wrapper>
         </ThemeContext.Provider>
       )}

@@ -34,10 +34,23 @@ const EmojiWrapper = styled.div`
 `;
 
 interface InputWrapperProps {
+  selectedChat: {
+    chatId: string;
+    chatName: string;
+    uidA: string;
+    uidB: string;
+  };
   scroll: RefObject<HTMLDivElement>;
+  userId: string;
+  userName: string;
 }
 
-const InputWrapper = ({ scroll }: InputWrapperProps) => {
+const InputWrapper = ({
+  selectedChat,
+  scroll,
+  userId,
+  userName
+}: InputWrapperProps) => {
   const [inputValue, setInputValue] = useState('');
   const [isEmoji, setIsEmoji] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -74,7 +87,7 @@ const InputWrapper = ({ scroll }: InputWrapperProps) => {
     setInputValue(e.target.value);
   };
 
-  const handleSendButton = (
+  const handleSendClick = (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault;
@@ -112,10 +125,11 @@ const InputWrapper = ({ scroll }: InputWrapperProps) => {
     try {
       setInputValue('');
       await addDoc(collection(getFirestore(), 'messages'), {
-        name: getUserName(),
+        name: userName,
         text: messageText,
         timestamp: serverTimestamp(),
-        uid: getUserId()
+        uid: userId,
+        chatId: `${selectedChat.chatId}`
       });
       scroll.current?.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
@@ -139,19 +153,20 @@ const InputWrapper = ({ scroll }: InputWrapperProps) => {
         ''
       )}
       <Button
-        isIcon={true}
+        buttonType="icon"
         icon="emoji"
         handleClick={handleEmojiButton}
       />
       <Input
         value={inputValue}
+        placeholder="Aa"
         handleChange={handleInputChange}
         handleInputKeyDown={handleInputKeyDown}
       />
       <Button
-        isIcon={true}
+        buttonType="icon"
         icon="send"
-        handleClick={handleSendButton}
+        handleClick={handleSendClick}
       />
     </Wrapper>
   );

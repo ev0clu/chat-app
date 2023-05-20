@@ -39,8 +39,17 @@ const Paragraph = styled.p`
 `;
 
 interface Props {
-  selectedChat: string;
-  message: {
+  selectedChat: {
+    chatId: string;
+    chatName: string;
+    uidA: string;
+    uidB: string;
+    timestamp: {
+      seconds: number;
+      nanoseconds: number;
+    };
+  };
+  messages: {
     id: string;
     name: string;
     text: string;
@@ -53,24 +62,24 @@ interface Props {
   }[];
 }
 
-const Header = ({ selectedChat, message }: Props) => {
+const Header = ({ selectedChat, messages }: Props) => {
   const [time, setTime] = useState('');
 
   useEffect(() => {
-    if (message[0].timestamp !== null) {
+    if (messages[0].timestamp !== null) {
       setTime(
         format(
-          new Date(message[0].timestamp.seconds * 1000),
+          new Date(messages[0].timestamp.seconds * 1000),
           'dd/MM HH:mm'
         )
       );
     }
-  }, [message]);
+  }, [messages]);
 
   return (
     <Wrapper>
-      <StyledChatLogo>{selectedChat[0]}</StyledChatLogo>
-      <Title>{selectedChat}</Title>
+      <StyledChatLogo>{selectedChat.chatName[0]}</StyledChatLogo>
+      <Title>{selectedChat.chatName}</Title>
       <Paragraph>Last message at {time}</Paragraph>
     </Wrapper>
   );

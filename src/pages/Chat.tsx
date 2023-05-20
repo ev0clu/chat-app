@@ -135,6 +135,7 @@ const Chat = () => {
 
   useEffect(() => {
     restoreTheme();
+    saveUserId();
   }, []);
 
   useEffect(() => {
@@ -191,6 +192,21 @@ const Chat = () => {
       unsubscribeMessages();
     };
   }, []);
+
+  const saveUserId = async () => {
+    // Add a new message entry to the Firebase database.
+    try {
+      await setDoc(doc(getFirestore(), 'users', userId), {
+        id: userId,
+        name: userName
+      });
+    } catch (error) {
+      console.error(
+        'Error writing new message to Firebase Database',
+        error
+      );
+    }
+  };
 
   const saveTheme = (data: string) => {
     localStorage.setItem('data-theme', JSON.stringify(data));

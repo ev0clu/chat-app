@@ -5,8 +5,6 @@ import {
   getFirestore,
   collection,
   addDoc,
-  setDoc,
-  doc,
   query,
   onSnapshot,
   serverTimestamp
@@ -21,12 +19,12 @@ import generateID from '../../helper/GenerateID';
 
 interface ThemeProps {
   $themeColor: string;
+  $isHover?: boolean;
 }
 
 const Wrapper = styled.div<ThemeProps>`
   grid-column: 1/2;
   grid-row: 1/4;
-  // eslint-disable-next-line react/prop-types
   border-right: 1px solid
     ${(props) =>
       props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
@@ -88,6 +86,31 @@ const Title = styled.h2`
   align-items: center;
 `;
 
+const UserListWrapper = styled.ul<ThemeProps>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  list-style-type: none;
+  height: 6rem;
+  border: 1px solid
+    ${(props) =>
+      props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
+  overflow-y: auto;
+  scroll-behavior: smooth;
+`;
+
+const StyledUserList = styled.li<ThemeProps>`
+  padding: 0.3rem 6rem;
+  font-size: 0.8rem;
+
+  &:hover {
+    cursor: pointer;
+    background-color: ${(props) =>
+      props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
+  }
+`;
+
 interface StyledUserPicProps {
   $backgroundImage: string;
 }
@@ -138,13 +161,19 @@ interface Props {
   handleChatClick: (e: React.MouseEvent<HTMLLIElement>) => void;
 }
 
-interface ChatProps {
+interface ChatsProps {
   chatId: string;
   chatName: string;
   uidA: string;
   uidB: string;
   timestamp: string;
   id: string;
+}
+
+interface UsersProps {
+  id: string;
+  name: string;
+  docId: string;
 }
 
 const Sidebar = ({
@@ -154,9 +183,12 @@ const Sidebar = ({
 }: Props) => {
   const theme = useContext(ThemeContext);
   const [userPic, setUserPic] = useState('');
+  const [users, setUsers] = useState<UsersProps[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState('');
+  const [selectedUserHover, setSelectedUserHover] = useState(false);
   const [addModal, setAddModal] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const [chat, setChat] = useState<ChatProps[]>([]);
+  const [chats, setChats] = useState<ChatsProps[]>([]);
   const popupRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -184,25 +216,45 @@ const Sidebar = ({
   useEffect(() => {
     // Loads chat messages history and listens for upcoming ones.
     // Create the query to load the last 12 messages and listen for new ones.
-    const recentMessagesQuery = query(
+    const recentChatsQuery = query(
       collection(getFirestore(), 'chats')
     );
 
     // Start listening to the query.
-    const unsubscribe = onSnapshot(
-      recentMessagesQuery,
+    const unsubscribeChats = onSnapshot(
+      recentChatsQuery,
       (snapshot) => {
-        const chats: ChatProps[] = [];
+        const chatsData: ChatsProps[] = [];
         snapshot.forEach((doc) => {
-          const data = doc.data() as ChatProps; // Assert the data type to MessageData
-          chats.push({ ...data, id: doc.id });
+          const data = doc.data() as ChatsProps; // Assert the data type to MessageData
+          chatsData.push({ ...data, id: doc.id });
         });
-        setChat(chats);
+        setChats(chatsData);
+      }
+    );
+
+    // Loads chat messages history and listens for upcoming ones.
+    // Create the query to load the last 12 messages and listen for new ones.
+    const recentUsersQuery = query(
+      collection(getFirestore(), 'users')
+    );
+
+    // Start listening to the query.
+    const unsubscribeUsers = onSnapshot(
+      recentUsersQuery,
+      (snapshot) => {
+        const usersData: UsersProps[] = [];
+        snapshot.forEach((doc) => {
+          const data = doc.data() as UsersProps; // Assert the data type to MessageData
+          usersData.push({ ...data, docId: doc.id });
+        });
+        setUsers(usersData);
       }
     );
 
     return () => {
-      unsubscribe();
+      unsubscribeChats();
+      unsubscribeUsers();
     };
   }, []);
 
@@ -213,7 +265,7 @@ const Sidebar = ({
         chatId: generateID(15),
         chatName: name,
         uidA: `${userId}`,
-        uidB: ``,
+        uidB: `${selectedUserId}`,
         timestamp: serverTimestamp()
       });
     } catch (error) {
@@ -280,7 +332,18 @@ const Sidebar = ({
     if (inputValue !== '') {
       saveChatBox(inputValue);
       setAddModal(false);
+      setInputValue('');
+      setSelectedUserHover(false);
     }
+  };
+
+  const handleUserSelectClick = (
+    e: React.MouseEvent<HTMLElement>
+  ) => {
+    e.preventDefault;
+    const target = e.currentTarget.dataset.id;
+    setSelectedUserId(target || '');
+    setSelectedUserHover(true);
   };
 
   return (
@@ -311,7 +374,7 @@ const Sidebar = ({
         </ButtonWrapper>
       </TopWrapper>
       <BottomWrapper>
-        {chat.map((chatData) =>
+        {chats.map((chatData) =>
           chatData.uidA === userId ||
           chatData.uidB === userId ||
           chatData.chatId === 'W969QPv7gOtsBhvQZEyHK1woZ' ? (
@@ -340,6 +403,20 @@ const Sidebar = ({
             placeholder="Chat name"
             handleChange={handleInputChange}
           />
+          <UserListWrapper
+            $themeColor={theme === 'light' ? 'dark' : 'light'}
+          >
+            {users.map((user) => (
+              <StyledUserList
+                data-id={user.id}
+                $themeColor={theme === 'light' ? 'dark' : 'light'}
+                onClick={handleUserSelectClick}
+                key={user.id}
+              >
+                <Title>{user.name}</Title>
+              </StyledUserList>
+            ))}
+          </UserListWrapper>
           <Button
             buttonType="new-chat"
             icon={theme === 'light' ? 'dark' : 'light'}

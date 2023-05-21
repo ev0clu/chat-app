@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import ThemeContext from '../../helper/ThemeContext';
+import Button from '../../elements/Button';
 
 const Wrapper = styled.header`
   grid-column: 2/3;
   grid-row: 1/2;
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
   grid-column-gap: 1rem;
   padding: 1rem;
 `;
@@ -27,11 +29,15 @@ const StyledChatLogo = styled.div`
 `;
 
 const Title = styled.h2`
+  grid-column: 2/3;
+  grid-row: 1/2;
   display: flex;
   align-items: center;
 `;
 
 const Paragraph = styled.p`
+  grid-column: 2/3;
+  grid-row: 2/3;
   display: flex;
   align-items: center;
   font-size: 1.1rem;
@@ -49,7 +55,7 @@ interface Props {
       nanoseconds: number;
     };
   };
-  messages: {
+  filteredMessages: {
     id: string;
     name: string;
     text: string;
@@ -60,27 +66,43 @@ interface Props {
     uid: string;
     chatId: string;
   }[];
+  handleDeleteChatClick: (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => void;
 }
 
-const Header = ({ selectedChat, messages }: Props) => {
+const Header = ({
+  selectedChat,
+  filteredMessages,
+  handleDeleteChatClick
+}: Props) => {
+  const theme = useContext(ThemeContext);
   const [time, setTime] = useState('');
 
   useEffect(() => {
-    if (messages[0].timestamp !== null) {
+    if (filteredMessages[0].timestamp !== null) {
       setTime(
         format(
-          new Date(messages[0].timestamp.seconds * 1000),
+          new Date(filteredMessages[0].timestamp.seconds * 1000),
           'dd/MM HH:mm'
         )
       );
     }
-  }, [messages]);
+  }, [filteredMessages]);
 
   return (
     <Wrapper>
       <StyledChatLogo>{selectedChat.chatName[0]}</StyledChatLogo>
       <Title>{selectedChat.chatName}</Title>
       <Paragraph>Last message at {time}</Paragraph>
+      {selectedChat.chatId !== 'W969QPv7gOtsBhvQZEyHK1woZ' && (
+        <Button
+          buttonType="icon"
+          icon="delete"
+          themeColor={theme === 'light' ? 'dark' : 'light'}
+          handleClick={handleDeleteChatClick}
+        />
+      )}
     </Wrapper>
   );
 };

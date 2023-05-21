@@ -3,7 +3,12 @@ import React from 'react';
 import styled from 'styled-components';
 import gLogo from '../assets/google_logo.svg';
 
-import { MdSend, MdLogout, MdDarkMode } from 'react-icons/md';
+import {
+  MdSend,
+  MdLogout,
+  MdDarkMode,
+  MdOutlineDelete
+} from 'react-icons/md';
 import { BsEmojiSmileFill, BsSun, BsPlusLg } from 'react-icons/bs';
 
 const StyledImg = styled.img`
@@ -168,6 +173,15 @@ const Button = ({
             onClick={handleClick}
           >
             <BsSun />
+          </StyledIconSidebarButton>
+        );
+      } else if (icon === 'delete') {
+        return (
+          <StyledIconSidebarButton
+            $themeColor={themeColor || '#78716c'}
+            onClick={handleClick}
+          >
+            <MdOutlineDelete />
           </StyledIconSidebarButton>
         );
       }

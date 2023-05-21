@@ -7,6 +7,7 @@ import {
   setDoc,
   doc,
   query,
+  orderBy,
   onSnapshot,
   serverTimestamp
 } from 'firebase/firestore';
@@ -225,7 +226,8 @@ const Sidebar = ({
     // Loads chat messages history and listens for upcoming ones.
     // Create the query to load the last 12 messages and listen for new ones.
     const recentChatsQuery = query(
-      collection(getFirestore(), 'chats')
+      collection(getFirestore(), 'chats'),
+      orderBy('timestamp', 'asc')
     );
 
     // Start listening to the query.
@@ -272,9 +274,8 @@ const Sidebar = ({
     while (isChat) {
       id = generateID(15);
       isChat = chats.some((chat) => chat.chatId === id);
-      console.log('asd');
     }
-    console.log('id:', id);
+
     // Add a new message entry to the Firebase database.
     try {
       await setDoc(doc(getFirestore(), 'chats', `${id}`), {
@@ -420,16 +421,19 @@ const Sidebar = ({
           <UserListWrapper
             $themeColor={theme === 'light' ? 'dark' : 'light'}
           >
-            {users.map((user) => (
-              <StyledUserList
-                data-id={user.id}
-                $themeColor={theme === 'light' ? 'dark' : 'light'}
-                onClick={handleUserSelectClick}
-                key={user.id}
-              >
-                <Title>{user.name}</Title>
-              </StyledUserList>
-            ))}
+            {users.map(
+              (user) =>
+                user.id !== userId && (
+                  <StyledUserList
+                    data-id={user.id}
+                    $themeColor={theme === 'light' ? 'dark' : 'light'}
+                    onClick={handleUserSelectClick}
+                    key={user.id}
+                  >
+                    <Title>{user.name}</Title>
+                  </StyledUserList>
+                )
+            )}
           </UserListWrapper>
           <Button
             buttonType="new-chat"

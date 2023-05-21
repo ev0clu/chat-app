@@ -4,7 +4,8 @@ import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import {
   getFirestore,
   collection,
-  addDoc,
+  setDoc,
+  doc,
   query,
   onSnapshot,
   serverTimestamp
@@ -27,19 +28,27 @@ const Wrapper = styled.div<ThemeProps>`
   border-right: 1px solid
     ${(props) =>
       props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
-  padding: 1rem;
+  min-width: 22rem;
+  overflow-y: auto;
+  scroll-behavior: smooth;
 `;
 
 const StyledLink = styled(Link)`
   text-decoration: none;
 `;
 
-const TopWrapper = styled.div`
+const TopWrapper = styled.div<ThemeProps>`
+  position: sticky;
+  top: 0;
+  left: 0;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   justify-content: space-between;
+  padding: 1rem 1rem;
+  background-color: ${(props) =>
+    props.$themeColor === 'light' ? '#27272a' : '#fff'};
 `;
 
 const BottomWrapper = styled.ul`
@@ -47,7 +56,7 @@ const BottomWrapper = styled.ul`
   flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
-  margin-top: 3rem;
+  padding: 1rem 1rem;
 `;
 
 const StyledChatBox = styled.li<ThemeProps>`
@@ -258,10 +267,18 @@ const Sidebar = ({
   }, []);
 
   const saveChatBox = async (name: string) => {
+    let isChat = true;
+    let id = '';
+    while (isChat) {
+      id = generateID(15);
+      isChat = chats.some((chat) => chat.chatId === id);
+      console.log('asd');
+    }
+    console.log('id:', id);
     // Add a new message entry to the Firebase database.
     try {
-      await addDoc(collection(getFirestore(), 'chats'), {
-        chatId: generateID(15),
+      await setDoc(doc(getFirestore(), 'chats', `${id}`), {
+        chatId: id,
         chatName: name,
         uidA: `${userId}`,
         uidB: `${selectedUserId}`,
@@ -345,7 +362,7 @@ const Sidebar = ({
 
   return (
     <Wrapper $themeColor={theme === 'light' ? 'dark' : 'light'}>
-      <TopWrapper>
+      <TopWrapper $themeColor={theme === 'light' ? 'dark' : 'light'}>
         <StyledUserPic $backgroundImage={userPic}></StyledUserPic>
         <ButtonWrapper>
           <Button

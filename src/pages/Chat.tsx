@@ -4,31 +4,19 @@ import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import ThemeContext from '../helper/ThemeContext';
 
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import {
   getFirestore,
   collection,
-  addDoc,
   query,
   orderBy,
   limit,
+  where,
   onSnapshot,
   setDoc,
-  updateDoc,
-  doc,
-  serverTimestamp
+  deleteDoc,
+  getDocs,
+  doc
 } from 'firebase/firestore';
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL
-} from 'firebase/storage';
-import {
-  getMessaging,
-  getToken,
-  onMessage
-} from 'firebase/messaging';
 
 import Header from '../components/Chat/Header';
 import Sidebar from '../components/Chat/Sidebar';
@@ -124,7 +112,7 @@ const Chat = () => {
     uidB: '',
     timestamp: { seconds: 1684569600, nanoseconds: 31000000 }
   });
-  const [chat, setChat] = useState<ChatsProps[]>([]);
+  const [chats, setChats] = useState<ChatsProps[]>([]);
   const [filteredMessages, setFilteredMessages] = useState<
     MessagesProps[]
   >([]);
@@ -139,6 +127,12 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
+    if (chats.length > 0) {
+      setSelectedChat(chats[0]);
+    }
+  }, [chats]);
+
+  useEffect(() => {
     const filteredData: MessagesProps[] = messages.filter(
       (message) => message.chatId === selectedChat.chatId
     );
@@ -150,19 +144,19 @@ const Chat = () => {
     // Create the query to load the last 12 messages and listen for new ones.
     const recentChatsQuery = query(
       collection(getFirestore(), 'chats'),
-      orderBy('timestamp', 'desc')
+      orderBy('timestamp', 'asc')
     );
 
     // Start listening to the query.
     const unsubscribeChats = onSnapshot(
       recentChatsQuery,
       (snapshot) => {
-        const chats: ChatsProps[] = [];
+        const chatData: ChatsProps[] = [];
         snapshot.forEach((doc) => {
           const data = doc.data() as ChatsProps; // Assert the data type to MessageData
-          chats.push({ ...data, id: doc.id });
+          chatData.push({ ...data, id: doc.id });
         });
-        setChat(chats);
+        setChats(chatData);
       }
     );
 
@@ -233,19 +227,42 @@ const Chat = () => {
 
   const handleChatClick = (e: React.MouseEvent<HTMLLIElement>) => {
     const id = e.currentTarget.dataset.name;
-    const index = chat.findIndex((element) => element.chatId === id);
+    const index = chats.findIndex((element) => element.chatId === id);
     setSelectedChat({
-      chatId: chat[index].chatId,
-      chatName: chat[index].chatName,
-      uidA: chat[index].uidA,
-      uidB: chat[index].uidB,
-      timestamp: chat[index].timestamp
+      chatId: chats[index].chatId,
+      chatName: chats[index].chatName,
+      uidA: chats[index].uidA,
+      uidB: chats[index].uidB,
+      timestamp: chats[index].timestamp
+    });
+  };
+
+  const handleDeleteChatClick = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault;
+    const q = query(
+      collection(getFirestore(), 'messages'),
+      where('chatId', '==', selectedChat.chatId)
+    );
+    const querySnapshot = await getDocs(q);
+
+    await deleteDoc(
+      doc(getFirestore(), 'chats', selectedChat.chatId)
+    );
+
+    setSelectedChat(chats[0]);
+
+    querySnapshot.forEach(async (queryDocumentSnapshot) => {
+      await deleteDoc(
+        doc(getFirestore(), 'messages', queryDocumentSnapshot.id)
+      );
     });
   };
 
   return (
     <>
-      {messages.length === 0 ? (
+      {filteredMessages.length === 0 ? (
         <LoadingWrapper>
           <Dot $delay="0"></Dot>
           <Dot $delay="0.2s"></Dot>
@@ -259,7 +276,11 @@ const Chat = () => {
               handleThemeClick={handleThemeClick}
               handleChatClick={handleChatClick}
             />
-            <Header selectedChat={selectedChat} messages={messages} />
+            <Header
+              selectedChat={selectedChat}
+              filteredMessages={filteredMessages}
+              handleDeleteChatClick={handleDeleteChatClick}
+            />
             <MessageWrapper
               selectedChat={selectedChat}
               filteredMessages={filteredMessages}

@@ -112,6 +112,10 @@ const Chat = () => {
     uidB: '',
     timestamp: { seconds: 1684569600, nanoseconds: 31000000 }
   });
+  const [prevSelectedChatDOM, setPrevSelectedChatDOM] =
+    useState<HTMLElement>();
+  const [currentSelectedChatDOM, setCurrentSelectedChatDOM] =
+    useState<HTMLElement>();
   const [chats, setChats] = useState<ChatsProps[]>([]);
   const [filteredMessages, setFilteredMessages] = useState<
     MessagesProps[]
@@ -125,6 +129,21 @@ const Chat = () => {
     restoreTheme();
     saveUserId();
   }, []);
+
+  useEffect(() => {
+    if (
+      prevSelectedChatDOM &&
+      currentSelectedChatDOM &&
+      prevSelectedChatDOM !== currentSelectedChatDOM
+    ) {
+      prevSelectedChatDOM.style.backgroundColor = '';
+      currentSelectedChatDOM.style.backgroundColor =
+        theme === 'light' ? '#d4d4d4' : '#78716c';
+    } else if (currentSelectedChatDOM) {
+      currentSelectedChatDOM.style.backgroundColor =
+        theme === 'light' ? '#d4d4d4' : '#78716c';
+    }
+  }, [currentSelectedChatDOM, theme]);
 
   useEffect(() => {
     if (chats.length > 0) {
@@ -226,8 +245,13 @@ const Chat = () => {
   };
 
   const handleChatClick = (e: React.MouseEvent<HTMLLIElement>) => {
+    e.preventDefault;
     const id = e.currentTarget.dataset.name;
     const index = chats.findIndex((element) => element.chatId === id);
+
+    setPrevSelectedChatDOM(currentSelectedChatDOM);
+    setCurrentSelectedChatDOM(e.currentTarget);
+
     setSelectedChat({
       chatId: chats[index].chatId,
       chatName: chats[index].chatName,

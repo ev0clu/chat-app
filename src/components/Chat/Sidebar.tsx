@@ -194,6 +194,10 @@ const Sidebar = ({
   const [userPic, setUserPic] = useState('');
   const [users, setUsers] = useState<UsersProps[]>([]);
   const [selectedUserId, setSelectedUserId] = useState('');
+  const [prevSelectedUserDOM, setPrevSelectedUserDOM] =
+    useState<HTMLElement>();
+  const [currentSelectedUserDOM, setCurrentSelectedUserDOM] =
+    useState<HTMLElement>();
   const [addModal, setAddModal] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [chats, setChats] = useState<ChatsProps[]>([]);
@@ -207,6 +211,8 @@ const Sidebar = ({
       ) {
         // Clicked outside the popup, close it
         setAddModal(false);
+        setSelectedUserId('');
+        setInputValue('');
       }
     };
 
@@ -216,6 +222,21 @@ const Sidebar = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (
+      prevSelectedUserDOM &&
+      currentSelectedUserDOM &&
+      prevSelectedUserDOM !== currentSelectedUserDOM
+    ) {
+      prevSelectedUserDOM.style.backgroundColor = '';
+      currentSelectedUserDOM.style.backgroundColor =
+        theme === 'light' ? '#d4d4d4' : '#78716c';
+    } else if (currentSelectedUserDOM) {
+      currentSelectedUserDOM.style.backgroundColor =
+        theme === 'light' ? '#d4d4d4' : '#78716c';
+    }
+  }, [currentSelectedUserDOM, theme]);
 
   useEffect(() => {
     initFirebaseAuth();
@@ -238,6 +259,7 @@ const Sidebar = ({
           const data = doc.data() as ChatsProps; // Assert the data type to MessageData
           chatsData.push({ ...data, id: doc.id });
         });
+
         setChats(chatsData);
       }
     );
@@ -356,8 +378,12 @@ const Sidebar = ({
     e: React.MouseEvent<HTMLElement>
   ) => {
     e.preventDefault;
-    const target = e.currentTarget.dataset.id;
-    setSelectedUserId(target || '');
+    const id = e.currentTarget.dataset.id;
+
+    setPrevSelectedUserDOM(currentSelectedUserDOM);
+    setCurrentSelectedUserDOM(e.currentTarget);
+
+    setSelectedUserId(id || '');
   };
 
   return (

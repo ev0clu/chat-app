@@ -99,7 +99,6 @@ const Title = styled.h2`
 const UserListWrapper = styled.ul<ThemeProps>`
   display: flex;
   flex-direction: column;
-  align-items: center;
   text-decoration: none;
   list-style-type: none;
   height: 6rem;
@@ -392,7 +391,8 @@ const Sidebar = ({
         {chats.map((chatData) =>
           chatData.uidA === userId ||
           chatData.uidB === userId ||
-          chatData.chatId === 'W969QPv7gOtsBhvQZEyHK1woZ' ? (
+          chatData.chatId ===
+            import.meta.env.VITE_PUBLIC_CHAT_VARIABLE ? (
             <StyledChatBox
               data-name={chatData.chatId}
               $themeColor={theme === 'light' ? 'dark' : 'light'}

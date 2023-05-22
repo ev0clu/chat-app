@@ -95,7 +95,8 @@ const Header = ({
       <StyledChatLogo>{selectedChat.chatName[0]}</StyledChatLogo>
       <Title>{selectedChat.chatName}</Title>
       <Paragraph>Last message at {time}</Paragraph>
-      {selectedChat.chatId !== 'W969QPv7gOtsBhvQZEyHK1woZ' && (
+      {selectedChat.chatId !==
+        import.meta.env.VITE_PUBLIC_CHAT_VARIABLE && (
         <Button
           buttonType="icon"
           icon="delete"

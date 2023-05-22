@@ -106,7 +106,7 @@ interface ChatsProps {
 const Chat = () => {
   const [theme, setTheme] = useState('light');
   const [selectedChat, setSelectedChat] = useState({
-    chatId: 'W969QPv7gOtsBhvQZEyHK1woZ',
+    chatId: import.meta.env.VITE_PUBLIC_CHAT_VARIABLE,
     chatName: 'Public Chat',
     uidA: '',
     uidB: '',

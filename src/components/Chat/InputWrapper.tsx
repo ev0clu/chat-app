@@ -73,14 +73,6 @@ const InputWrapper = ({
     };
   }, []);
 
-  const getUserId = () => {
-    return getAuth().currentUser?.uid;
-  };
-
-  const getUserName = () => {
-    return getAuth().currentUser?.displayName;
-  };
-
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {

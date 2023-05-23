@@ -14,6 +14,7 @@ const Wrapper = styled.header`
 `;
 
 const StyledChatLogo = styled.div`
+  grid-column: 1/2;
   grid-row: 1/3;
   display: flex;
   justify-content: center;
@@ -42,6 +43,14 @@ const Paragraph = styled.p`
   align-items: center;
   font-size: 1.1rem;
   color: #a3a3a3;
+`;
+
+const ButtonWrapper = styled.div`
+  grid-column: 3/4;
+  grid-row: 1/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 interface Props {
@@ -80,15 +89,23 @@ const Header = ({
   const [time, setTime] = useState('');
 
   useEffect(() => {
-    if (filteredMessages[0].timestamp !== null) {
+    console.log(filteredMessages[0]);
+    /* if (filteredMessages.length > 0) {
       setTime(
         format(
           new Date(filteredMessages[0].timestamp.seconds * 1000),
           'dd/MM HH:mm'
         )
       );
-    }
-  }, [filteredMessages]);
+    } else {
+      setTime(
+        format(
+          new Date(selectedChat.timestamp.seconds * 1000),
+          'dd/MM HH:mm'
+        )
+      );
+    }*/
+  }, [selectedChat]);
 
   return (
     <Wrapper>
@@ -97,12 +114,14 @@ const Header = ({
       <Paragraph>Last message at {time}</Paragraph>
       {selectedChat.chatId !==
         import.meta.env.VITE_PUBLIC_CHAT_VARIABLE && (
-        <Button
-          buttonType="icon"
-          icon="delete"
-          themeColor={theme === 'light' ? 'dark' : 'light'}
-          handleClick={handleDeleteChatClick}
-        />
+        <ButtonWrapper>
+          <Button
+            buttonType="icon"
+            icon="delete"
+            themeColor={theme === 'light' ? 'dark' : 'light'}
+            handleClick={handleDeleteChatClick}
+          />
+        </ButtonWrapper>
       )}
     </Wrapper>
   );

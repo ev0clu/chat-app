@@ -1,7 +1,15 @@
-import styled from 'styled-components';
-import { useState, useEffect, RefObject, useRef } from 'react';
+import {
+  Wrapper,
+  EmojiWrapper
+} from '../../styled-components/Chat/InputWrapperStyles';
+import { InputWrapperComponentProps } from '../../types/functional-components-types';
+import EmojiPicker, {
+  EmojiClickData,
+  EmojiStyle
+} from 'emoji-picker-react';
 
-import { getAuth } from 'firebase/auth';
+import { useState, useEffect, useRef } from 'react';
+
 import {
   getFirestore,
   collection,
@@ -9,48 +17,15 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 
-import EmojiPicker, {
-  EmojiClickData,
-  EmojiStyle
-} from 'emoji-picker-react';
 import Input from '../../elements/Input';
 import Button from '../../elements/Button';
-
-const Wrapper = styled.div`
-  grid-column: 2/3;
-  grid-row: 3/4;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  grid-column-gap: 1rem;
-  padding: 1rem;
-  position: relative;
-`;
-
-const EmojiWrapper = styled.div`
-  position: absolute;
-  bottom: 1rem;
-  left: 1rem;
-`;
-
-interface InputWrapperProps {
-  selectedChat: {
-    chatId: string;
-    chatName: string;
-    uidA: string;
-    uidB: string;
-  };
-  scroll: RefObject<HTMLDivElement>;
-  userId: string;
-  userName: string;
-}
 
 const InputWrapper = ({
   selectedChat,
   scroll,
   userId,
   userName
-}: InputWrapperProps) => {
+}: InputWrapperComponentProps) => {
   const [inputValue, setInputValue] = useState('');
   const [isEmoji, setIsEmoji] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);

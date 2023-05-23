@@ -1,4 +1,23 @@
-import styled from 'styled-components';
+import {
+  SidebarProps,
+  UsersProps
+} from '../../types/functional-components-types';
+
+import {
+  SidebarWrapper,
+  StyledLink,
+  TopWrapper,
+  BottomWrapper,
+  StyledChatBox,
+  StyledChatLogo,
+  Title,
+  UserListWrapper,
+  StyledUserList,
+  StyledUserPic,
+  ButtonWrapper,
+  AddChatWrapper,
+  StyledAddChatTitle
+} from '../../styled-components/Chat/SidebarStyles';
 
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import {
@@ -7,189 +26,22 @@ import {
   setDoc,
   doc,
   query,
-  orderBy,
   onSnapshot,
   serverTimestamp
 } from 'firebase/firestore';
 
 import ThemeContext from '../../helper/ThemeContext';
 import { useContext, useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import Button from '../../elements/Button';
 import Input from '../../elements/Input';
 import generateID from '../../helper/GenerateID';
 
-interface ThemeProps {
-  $themeColor: string;
-}
-
-const Wrapper = styled.div<ThemeProps>`
-  grid-column: 1/2;
-  grid-row: 1/4;
-  border-right: 1px solid
-    ${(props) =>
-      props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
-  min-width: 22rem;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-`;
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-`;
-
-const TopWrapper = styled.div<ThemeProps>`
-  position: sticky;
-  top: 0;
-  left: 0;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1rem;
-  background-color: ${(props) =>
-    props.$themeColor === 'light' ? '#27272a' : '#fff'};
-`;
-
-const BottomWrapper = styled.ul`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1rem 1rem;
-`;
-
-const StyledChatBox = styled.li<ThemeProps>`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 1rem;
-  text-decoration: none;
-  padding: 1rem 2rem;
-  border-radius: 0.5rem;
-
-  &:hover {
-    cursor: pointer;
-    background-color: ${(props) =>
-      props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
-  }
-`;
-
-const StyledChatLogo = styled.div`
-  grid-row: 1/3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2rem;
-  font-weight: 500;
-  height: 4rem;
-  width: 4rem;
-  padding: 0.5rem;
-  border-radius: 50%;
-  background-color: #059669;
-  color: #fff;
-`;
-
-const Title = styled.h2`
-  display: flex;
-  align-items: center;
-`;
-
-const UserListWrapper = styled.ul<ThemeProps>`
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  list-style-type: none;
-  height: 6rem;
-  border: 1px solid
-    ${(props) =>
-      props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
-  overflow-y: auto;
-  scroll-behavior: smooth;
-`;
-
-const StyledUserList = styled.li<ThemeProps>`
-  padding: 0.3rem 6rem;
-  font-size: 0.8rem;
-
-  &:hover {
-    cursor: pointer;
-    background-color: ${(props) =>
-      props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
-  }
-`;
-
-interface StyledUserPicProps {
-  $backgroundImage: string;
-}
-
-const StyledUserPic = styled.div<StyledUserPicProps>`
-  height: 4rem;
-  width: 4rem;
-  border-radius: 50%;
-  background-image: ${(props) => props.$backgroundImage};
-  background-repeat: no-repeat;
-  background-size: 4rem;
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
-`;
-
-interface AddChatWrapperProps {
-  $themeColor: string;
-}
-
-const AddChatWrapper = styled.div<AddChatWrapperProps>`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: ${(props) =>
-    props.$themeColor === 'light' ? '#222' : '#fff'};
-  border: 1px solid
-    ${(props) =>
-      props.$themeColor === 'dark' ? '#a8a29e' : '#e7e5e4'};
-`;
-
-const StyledAddChatTitle = styled.h1`
-  text-align: center;
-  margin-bottom: 1rem;
-`;
-
-interface Props {
-  userId: string;
-  handleThemeClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  handleChatClick: (e: React.MouseEvent<HTMLLIElement>) => void;
-}
-
-interface ChatsProps {
-  chatId: string;
-  chatName: string;
-  uidA: string;
-  uidB: string;
-  timestamp: string;
-  id: string;
-}
-
-interface UsersProps {
-  id: string;
-  name: string;
-  docId: string;
-}
-
 const Sidebar = ({
   userId,
+  chats,
   handleThemeClick,
   handleChatClick
-}: Props) => {
+}: SidebarProps) => {
   const theme = useContext(ThemeContext);
   const [userPic, setUserPic] = useState('');
   const [users, setUsers] = useState<UsersProps[]>([]);
@@ -200,7 +52,6 @@ const Sidebar = ({
     useState<HTMLElement>();
   const [addModal, setAddModal] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const [chats, setChats] = useState<ChatsProps[]>([]);
   const popupRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -245,27 +96,6 @@ const Sidebar = ({
   useEffect(() => {
     // Loads chat messages history and listens for upcoming ones.
     // Create the query to load the last 12 messages and listen for new ones.
-    const recentChatsQuery = query(
-      collection(getFirestore(), 'chats'),
-      orderBy('timestamp', 'asc')
-    );
-
-    // Start listening to the query.
-    const unsubscribeChats = onSnapshot(
-      recentChatsQuery,
-      (snapshot) => {
-        const chatsData: ChatsProps[] = [];
-        snapshot.forEach((doc) => {
-          const data = doc.data() as ChatsProps; // Assert the data type to MessageData
-          chatsData.push({ ...data, id: doc.id });
-        });
-
-        setChats(chatsData);
-      }
-    );
-
-    // Loads chat messages history and listens for upcoming ones.
-    // Create the query to load the last 12 messages and listen for new ones.
     const recentUsersQuery = query(
       collection(getFirestore(), 'users')
     );
@@ -284,7 +114,6 @@ const Sidebar = ({
     );
 
     return () => {
-      unsubscribeChats();
       unsubscribeUsers();
     };
   }, []);
@@ -387,7 +216,9 @@ const Sidebar = ({
   };
 
   return (
-    <Wrapper $themeColor={theme === 'light' ? 'dark' : 'light'}>
+    <SidebarWrapper
+      $themeColor={theme === 'light' ? 'dark' : 'light'}
+    >
       <TopWrapper $themeColor={theme === 'light' ? 'dark' : 'light'}>
         <StyledUserPic $backgroundImage={userPic}></StyledUserPic>
         <ButtonWrapper>
@@ -472,7 +303,7 @@ const Sidebar = ({
       ) : (
         ''
       )}
-    </Wrapper>
+    </SidebarWrapper>
   );
 };
 

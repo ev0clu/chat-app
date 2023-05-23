@@ -1,4 +1,13 @@
-import styled from 'styled-components';
+import {
+  LoadingWrapper,
+  StyledDot,
+  ChatWrapper
+} from '../styled-components/Chat/ChatStyles';
+
+import {
+  ChatsProps,
+  MessagesProps
+} from '../types/functional-components-types';
 
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -20,88 +29,8 @@ import {
 
 import Header from '../components/Chat/Header';
 import Sidebar from '../components/Chat/Sidebar';
-import MessageWrapper from '../components/Chat/MessageWrapper';
+import MessageWrapper from '../components/Chat/MessagesWrapper';
 import InputWrapper from '../components/Chat/InputWrapper';
-
-const LoadingWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-interface DotProps {
-  $delay: string;
-}
-
-const Dot = styled.div<DotProps>`
-  width: 16px;
-  height: 16px;
-  margin: 3px 6px;
-  border-radius: 50%;
-  background-color: #2f80ed;
-  opacity: 1;
-  animation: bouncing-loader 0.6s infinite alternate;
-  animation-delay: ${(props) => props.$delay};
-
-  @keyframes bouncing-loader {
-    to {
-      opacity: 0.1;
-      transform: translateY(-16px);
-    }
-  }
-`;
-
-interface WrapperProps {
-  $themeColor: string;
-}
-
-const Wrapper = styled.div<WrapperProps>`
-  flex: 1;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto 1fr auto;
-  color: ${(props) =>
-    props.$themeColor === 'light'
-      ? lightTheme.color
-      : darkTheme.color};
-  background-color: ${(props) =>
-    props.$themeColor === 'light'
-      ? lightTheme.background
-      : darkTheme.background};
-  max-height: 100vh;
-`;
-
-const lightTheme = {
-  background: '#fff',
-  color: '#222'
-};
-
-const darkTheme = {
-  background: '#27272a',
-  color: '#fff'
-};
-
-interface MessagesProps {
-  id: string;
-  name: string;
-  text: string;
-  timestamp: {
-    nanoseconds: number;
-    seconds: number;
-  };
-  uid: string;
-  chatId: string;
-}
-
-interface ChatsProps {
-  chatId: string;
-  chatName: string;
-  uidA: string;
-  uidB: string;
-  timestamp: { seconds: number; nanoseconds: number };
-  id: string;
-}
 
 const Chat = () => {
   const [theme, setTheme] = useState('light');
@@ -291,15 +220,16 @@ const Chat = () => {
      import.meta.env.VITE_PUBLIC_CHAT_VARIABLE ? (*/}
       {messages.length === 0 ? (
         <LoadingWrapper>
-          <Dot $delay="0"></Dot>
-          <Dot $delay="0.2s"></Dot>
-          <Dot $delay="0.4s"></Dot>
+          <StyledDot $delay="0"></StyledDot>
+          <StyledDot $delay="0.2s"></StyledDot>
+          <StyledDot $delay="0.4s"></StyledDot>
         </LoadingWrapper>
       ) : (
         <ThemeContext.Provider value={theme}>
-          <Wrapper $themeColor={theme}>
+          <ChatWrapper $themeColor={theme}>
             <Sidebar
               userId={userId}
+              chats={chats}
               handleThemeClick={handleThemeClick}
               handleChatClick={handleChatClick}
             />
@@ -320,7 +250,7 @@ const Chat = () => {
               userId={userId}
               userName={userName}
             />
-          </Wrapper>
+          </ChatWrapper>
         </ThemeContext.Provider>
       )}
     </>

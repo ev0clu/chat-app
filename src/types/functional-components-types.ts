@@ -87,6 +87,15 @@ interface ButtonProps {
   handleClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
+interface InputProps {
+  value: string;
+  placeholder: string;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleInputKeyDown?: (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => void;
+}
+
 export type {
   ChatsProps,
   MessagesProps,
@@ -95,5 +104,6 @@ export type {
   MessagesWrapperComponentProps,
   SidebarProps,
   UsersProps,
-  ButtonProps
+  ButtonProps,
+  InputProps
 };

@@ -286,7 +286,10 @@ const Chat = () => {
 
   return (
     <>
-      {filteredMessages.length === 0 ? (
+      {/* {filteredMessages.length === 0 &&
+      selectedChat.chatId ===
+     import.meta.env.VITE_PUBLIC_CHAT_VARIABLE ? (*/}
+      {messages.length === 0 ? (
         <LoadingWrapper>
           <Dot $delay="0"></Dot>
           <Dot $delay="0.2s"></Dot>

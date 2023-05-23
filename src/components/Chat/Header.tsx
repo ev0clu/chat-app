@@ -89,8 +89,11 @@ const Header = ({
   const [time, setTime] = useState('');
 
   useEffect(() => {
-    console.log(filteredMessages[0]);
-    /* if (filteredMessages.length > 0) {
+    if (
+      filteredMessages.length > 0 &&
+      filteredMessages[0].timestamp !== null
+    ) {
+      console.log(filteredMessages);
       setTime(
         format(
           new Date(filteredMessages[0].timestamp.seconds * 1000),
@@ -104,8 +107,8 @@ const Header = ({
           'dd/MM HH:mm'
         )
       );
-    }*/
-  }, [selectedChat]);
+    }
+  }, [filteredMessages]);
 
   return (
     <Wrapper>

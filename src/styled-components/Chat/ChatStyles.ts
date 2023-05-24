@@ -42,7 +42,8 @@ const ChatWrapper = styled.div<ThemeProps>`
     props.$themeColor === 'light'
       ? lightTheme.background
       : darkTheme.background};
-  max-height: 100vh;
+  min-height: 100vh;
+  min-width: 100vw;
 `;
 
 const lightTheme = {

@@ -4,7 +4,7 @@ import {
   StyledNormalButton,
   StyledIconMsgButton,
   StyledIconSidebarButton
-} from '../styled-components/Button/ButtonStyles';
+} from '../styled-components/Elements/ButtonStyles';
 
 import gLogo from '../assets/google_logo.svg';
 

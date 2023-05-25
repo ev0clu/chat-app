@@ -117,7 +117,8 @@ const Chat = () => {
     try {
       await setDoc(doc(getFirestore(), 'users', userId), {
         id: userId,
-        name: userName
+        name: userName,
+        isSelected: false
       });
     } catch (error) {
       console.error(

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import type {
   ThemeProps,
   BackgroundImageProps,
-  ChatSelectingProps
+  SelectingProps
 } from '../../types/styled-components-types';
 
 const SidebarWrapper = styled.div<ThemeProps>`
@@ -43,7 +43,7 @@ const BottomWrapper = styled.ul`
   padding: 1rem 1rem;
 `;
 
-const StyledChatBox = styled.li<ChatSelectingProps>`
+const StyledChatBox = styled.li<SelectingProps>`
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -97,9 +97,14 @@ const UserListWrapper = styled.ul<ThemeProps>`
   scroll-behavior: smooth;
 `;
 
-const StyledUserList = styled.li<ThemeProps>`
+const StyledUserList = styled.li<SelectingProps>`
   padding: 0.3rem 6rem;
   font-size: 0.8rem;
+  background-color: ${(props) => {
+    if (props.$backgroundColor) {
+      return props.$themeColor === 'light' ? '#78716c' : '#d4d4d4';
+    }
+  }};
 
   &:hover {
     cursor: pointer;

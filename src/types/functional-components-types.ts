@@ -77,6 +77,7 @@ interface SidebarProps {
 interface UsersProps {
   id: string;
   name: string;
+  isSelected: boolean;
   docId: string;
 }
 

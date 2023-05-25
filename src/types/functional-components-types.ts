@@ -29,6 +29,7 @@ interface ChatsProps {
   uidA: string;
   uidB: string;
   timestamp: { seconds: number; nanoseconds: number };
+  isSelected: boolean;
   id: string;
 }
 

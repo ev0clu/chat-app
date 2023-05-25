@@ -133,7 +133,8 @@ const Sidebar = ({
         chatName: name,
         uidA: `${userId}`,
         uidB: `${selectedUserId}`,
-        timestamp: serverTimestamp()
+        timestamp: serverTimestamp(),
+        isSelected: false
       });
     } catch (error) {
       console.error(
@@ -253,6 +254,7 @@ const Sidebar = ({
             <StyledChatBox
               data-name={chatData.chatId}
               $themeColor={theme === 'light' ? 'dark' : 'light'}
+              $backgroundColor={chatData.isSelected}
               onClick={handleChatClick}
               key={chatData.chatId}
             >

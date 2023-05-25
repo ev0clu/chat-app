@@ -7,7 +7,7 @@ A general chat app has built.
 ## Features
 
 - Log in with Google authentication
-- Firebase uses for backend to store users, chat rooms and messages content
+- Firebase uses for backend to store users, chat rooms and messages content data
 - React routes uses to handle pages
 - Loading screen uses until data are loaded for Chat page
 - Light and Dark theme can choose
@@ -15,12 +15,13 @@ A general chat app has built.
   - Porfile picture from google authentication
   - Buttons for theme changes, logout and private chat adding
   - Public chat to every user for general chating
-  - Private chat for 2 users
+  - Private chat can be added and 2 users can talk
+  - Red border notification if chat room name or user selection is missing
 - Header:
   - Shows selected chat room logo, room name and last message date
   - Delete button to remove chats with messages, except the Public Chat data
 - Messages:
-  - Message bubbles oriented based on the logged user's message or other users
+  - Message bubbles oriented based on the message from the logged user or from other users
 - Message sending:
   - Emoji characters can use beside normal characters
 

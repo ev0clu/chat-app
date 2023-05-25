@@ -39,12 +39,9 @@ const Chat = () => {
     chatName: 'Public Chat',
     uidA: '',
     uidB: '',
-    timestamp: { seconds: 1684569600, nanoseconds: 31000000 }
+    timestamp: { seconds: 1684569600, nanoseconds: 31000000 },
+    isSelected: true
   });
-  const [prevSelectedChatDOM, setPrevSelectedChatDOM] =
-    useState<HTMLElement>();
-  const [currentSelectedChatDOM, setCurrentSelectedChatDOM] =
-    useState<HTMLElement>();
   const [chats, setChats] = useState<ChatsProps[]>([]);
   const [filteredMessages, setFilteredMessages] = useState<
     MessagesProps[]
@@ -58,27 +55,6 @@ const Chat = () => {
     restoreTheme();
     saveUserId();
   }, []);
-
-  useEffect(() => {
-    if (
-      prevSelectedChatDOM &&
-      currentSelectedChatDOM &&
-      prevSelectedChatDOM !== currentSelectedChatDOM
-    ) {
-      prevSelectedChatDOM.style.backgroundColor = '';
-      currentSelectedChatDOM.style.backgroundColor =
-        theme === 'light' ? '#d4d4d4' : '#78716c';
-    } else if (currentSelectedChatDOM) {
-      currentSelectedChatDOM.style.backgroundColor =
-        theme === 'light' ? '#d4d4d4' : '#78716c';
-    }
-  }, [currentSelectedChatDOM, theme]);
-
-  useEffect(() => {
-    if (chats.length > 0) {
-      setSelectedChat(chats[0]);
-    }
-  }, [chats]);
 
   useEffect(() => {
     const filteredData: MessagesProps[] = messages.filter(
@@ -104,6 +80,7 @@ const Chat = () => {
           const data = doc.data() as ChatsProps; // Assert the data type to MessageData
           chatData.push({ ...data, id: doc.id });
         });
+
         setChats(chatData);
       }
     );
@@ -167,6 +144,24 @@ const Chat = () => {
     saveTheme(data);
   };
 
+  const resetChatSelection = (chatArray: ChatsProps[]) => {
+    const resetedChatsStatus = chatArray.map((chat) => ({ ...chat }));
+    resetedChatsStatus.forEach((chat) => {
+      chat.isSelected = false;
+    });
+
+    return resetedChatsStatus;
+  };
+
+  const setChatSelection = (
+    initArray: ChatsProps[],
+    index: number
+  ) => {
+    initArray[index].isSelected = true;
+
+    return initArray;
+  };
+
   const handleThemeClick = () => {
     const data: string = theme === 'light' ? 'dark' : 'light';
     setTheme(data);
@@ -178,18 +173,23 @@ const Chat = () => {
     const id = e.currentTarget.dataset.name;
     const index = chats.findIndex((element) => element.chatId === id);
 
-    setPrevSelectedChatDOM(currentSelectedChatDOM);
-    setCurrentSelectedChatDOM(e.currentTarget);
+    const resetedChatSelection = resetChatSelection(chats);
+    const initChatStatus = setChatSelection(
+      resetedChatSelection,
+      index
+    );
+
+    setChats(initChatStatus);
 
     setSelectedChat({
-      chatId: chats[index].chatId,
-      chatName: chats[index].chatName,
-      uidA: chats[index].uidA,
-      uidB: chats[index].uidB,
-      timestamp: chats[index].timestamp
+      chatId: initChatStatus[index].chatId,
+      chatName: initChatStatus[index].chatName,
+      uidA: initChatStatus[index].uidA,
+      uidB: initChatStatus[index].uidB,
+      timestamp: initChatStatus[index].timestamp,
+      isSelected: initChatStatus[index].isSelected
     });
   };
-
   const handleDeleteChatClick = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -215,9 +215,6 @@ const Chat = () => {
 
   return (
     <>
-      {/* {filteredMessages.length === 0 &&
-      selectedChat.chatId ===
-     import.meta.env.VITE_PUBLIC_CHAT_VARIABLE ? (*/}
       {messages.length === 0 ? (
         <LoadingWrapper>
           <StyledDot $delay="0"></StyledDot>

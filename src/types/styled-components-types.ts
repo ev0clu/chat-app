@@ -14,9 +14,15 @@ interface BackgroundImageProps {
   $backgroundImage: string;
 }
 
+interface ChatSelectingProps {
+  $themeColor: string;
+  $backgroundColor: boolean;
+}
+
 export type {
   ThemeProps,
   DotProps,
   MessagesWrapperProps,
-  BackgroundImageProps
+  BackgroundImageProps,
+  ChatSelectingProps
 };

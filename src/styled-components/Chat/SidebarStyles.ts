@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import type {
   ThemeProps,
-  BackgroundImageProps
+  BackgroundImageProps,
+  ChatSelectingProps
 } from '../../types/styled-components-types';
 
 const SidebarWrapper = styled.div<ThemeProps>`
@@ -42,7 +43,7 @@ const BottomWrapper = styled.ul`
   padding: 1rem 1rem;
 `;
 
-const StyledChatBox = styled.li<ThemeProps>`
+const StyledChatBox = styled.li<ChatSelectingProps>`
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -50,6 +51,11 @@ const StyledChatBox = styled.li<ThemeProps>`
   text-decoration: none;
   padding: 1rem 2rem;
   border-radius: 0.5rem;
+  background-color: ${(props) => {
+    if (props.$backgroundColor) {
+      return props.$themeColor === 'light' ? '#78716c' : '#d4d4d4';
+    }
+  }};
 
   &:hover {
     cursor: pointer;

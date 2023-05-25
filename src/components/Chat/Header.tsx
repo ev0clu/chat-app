@@ -26,7 +26,6 @@ const Header = ({
       filteredMessages.length > 0 &&
       filteredMessages[0].timestamp !== null
     ) {
-      console.log(filteredMessages);
       setTime(
         format(
           new Date(filteredMessages[0].timestamp.seconds * 1000),

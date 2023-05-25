@@ -46,10 +46,6 @@ const Sidebar = ({
   const [userPic, setUserPic] = useState('');
   const [users, setUsers] = useState<UsersProps[]>([]);
   const [selectedUserId, setSelectedUserId] = useState('');
-  const [prevSelectedUserDOM, setPrevSelectedUserDOM] =
-    useState<HTMLElement>();
-  const [currentSelectedUserDOM, setCurrentSelectedUserDOM] =
-    useState<HTMLElement>();
   const [addModal, setAddModal] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -75,21 +71,6 @@ const Sidebar = ({
   }, []);
 
   useEffect(() => {
-    if (
-      prevSelectedUserDOM &&
-      currentSelectedUserDOM &&
-      prevSelectedUserDOM !== currentSelectedUserDOM
-    ) {
-      prevSelectedUserDOM.style.backgroundColor = '';
-      currentSelectedUserDOM.style.backgroundColor =
-        theme === 'light' ? '#d4d4d4' : '#78716c';
-    } else if (currentSelectedUserDOM) {
-      currentSelectedUserDOM.style.backgroundColor =
-        theme === 'light' ? '#d4d4d4' : '#78716c';
-    }
-  }, [currentSelectedUserDOM, theme]);
-
-  useEffect(() => {
     initFirebaseAuth();
   }, []);
 
@@ -109,7 +90,10 @@ const Sidebar = ({
           const data = doc.data() as UsersProps; // Assert the data type to MessageData
           usersData.push({ ...data, docId: doc.id });
         });
-        setUsers(usersData);
+
+        const resetedUsersSelection = resetUsersSelection(usersData);
+
+        setUsers(resetedUsersSelection);
       }
     );
 
@@ -204,16 +188,41 @@ const Sidebar = ({
     }
   };
 
+  const resetUsersSelection = (userArray: UsersProps[]) => {
+    const resetedUsersStatus = userArray.map((user) => ({ ...user }));
+    resetedUsersStatus.forEach((user) => {
+      user.isSelected = false;
+    });
+
+    return resetedUsersStatus;
+  };
+
+  const setUserSelection = (
+    initArray: UsersProps[],
+    index: number
+  ) => {
+    initArray[index].isSelected = true;
+
+    return initArray;
+  };
+
   const handleUserSelectClick = (
     e: React.MouseEvent<HTMLElement>
   ) => {
     e.preventDefault;
     const id = e.currentTarget.dataset.id;
 
-    setPrevSelectedUserDOM(currentSelectedUserDOM);
-    setCurrentSelectedUserDOM(e.currentTarget);
+    const index = users.findIndex((element) => element.id === id);
 
-    setSelectedUserId(id || '');
+    const resetedUsersSelection = resetUsersSelection(users);
+    const setUsersStatus = setUserSelection(
+      resetedUsersSelection,
+      index
+    );
+
+    setUsers(setUsersStatus);
+
+    setSelectedUserId(setUsersStatus[index].id);
   };
 
   return (
@@ -286,6 +295,7 @@ const Sidebar = ({
                   <StyledUserList
                     data-id={user.id}
                     $themeColor={theme === 'light' ? 'dark' : 'light'}
+                    $backgroundColor={user.isSelected}
                     onClick={handleUserSelectClick}
                     key={user.id}
                   >

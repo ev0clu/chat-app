@@ -171,6 +171,8 @@ const Sidebar = ({
   ) => {
     e.preventDefault;
     setAddModal(true);
+    const resetedUsersSelection = resetUsersSelection(users);
+    setUsers(resetedUsersSelection);
   };
 
   const handleInputChange = (

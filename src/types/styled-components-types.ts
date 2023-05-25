@@ -19,10 +19,15 @@ interface SelectingProps {
   $backgroundColor: boolean;
 }
 
+interface MissingChatNameProps {
+  $borderColor: string;
+}
+
 export type {
   ThemeProps,
   DotProps,
   MessagesWrapperProps,
   BackgroundImageProps,
-  SelectingProps
+  SelectingProps,
+  MissingChatNameProps
 };

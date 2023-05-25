@@ -92,6 +92,7 @@ interface ButtonProps {
 interface InputProps {
   value: string;
   placeholder: string;
+  missingChatName: boolean;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleInputKeyDown?: (
     e: React.KeyboardEvent<HTMLInputElement>

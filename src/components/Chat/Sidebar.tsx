@@ -46,6 +46,7 @@ const Sidebar = ({
   const [userPic, setUserPic] = useState('');
   const [users, setUsers] = useState<UsersProps[]>([]);
   const [selectedUserId, setSelectedUserId] = useState('');
+  const [missingChatName, setMissingChatName] = useState(false);
   const [addModal, setAddModal] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -60,6 +61,7 @@ const Sidebar = ({
         setAddModal(false);
         setSelectedUserId('');
         setInputValue('');
+        setMissingChatName(false);
       }
     };
 
@@ -175,16 +177,20 @@ const Sidebar = ({
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setInputValue(e.target.value);
+    setMissingChatName(false);
   };
 
   const handleCreateChatClick = (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault;
+    setMissingChatName(false);
     if (inputValue !== '') {
       saveChatBox(inputValue);
       setAddModal(false);
       setInputValue('');
+    } else {
+      setMissingChatName(true);
     }
   };
 
@@ -284,6 +290,7 @@ const Sidebar = ({
           <Input
             value={inputValue}
             placeholder="Chat name"
+            missingChatName={missingChatName}
             handleChange={handleInputChange}
           />
           <UserListWrapper

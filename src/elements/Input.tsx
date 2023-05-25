@@ -4,7 +4,7 @@ import StyledInput from '../styled-components/Elements/InputStyles';
 const Input = ({
   value,
   placeholder,
-  missingChatName,
+  $boxShadow,
   handleChange,
   handleInputKeyDown
 }: InputProps) => {
@@ -12,7 +12,7 @@ const Input = ({
     <StyledInput
       type="text"
       placeholder={placeholder}
-      $borderColor={missingChatName ? 'red' : ''}
+      $boxShadow={$boxShadow}
       value={value}
       onChange={handleChange}
       onKeyDown={handleInputKeyDown}

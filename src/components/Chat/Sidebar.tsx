@@ -46,7 +46,8 @@ const Sidebar = ({
   const [userPic, setUserPic] = useState('');
   const [users, setUsers] = useState<UsersProps[]>([]);
   const [selectedUserId, setSelectedUserId] = useState('');
-  const [missingChatName, setMissingChatName] = useState(false);
+  const [missingChatInfo, setMissingChatInfo] = useState(false);
+  const [missingUserInfo, setMissingUserInfo] = useState(false);
   const [addModal, setAddModal] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -61,7 +62,8 @@ const Sidebar = ({
         setAddModal(false);
         setSelectedUserId('');
         setInputValue('');
-        setMissingChatName(false);
+        setMissingChatInfo(false);
+        setMissingUserInfo(false);
       }
     };
 
@@ -94,7 +96,6 @@ const Sidebar = ({
         });
 
         const resetedUsersSelection = resetUsersSelection(usersData);
-
         setUsers(resetedUsersSelection);
       }
     );
@@ -171,6 +172,9 @@ const Sidebar = ({
   ) => {
     e.preventDefault;
     setAddModal(true);
+    setSelectedUserId('');
+    setMissingChatInfo(false);
+    setMissingUserInfo(false);
     const resetedUsersSelection = resetUsersSelection(users);
     setUsers(resetedUsersSelection);
   };
@@ -179,20 +183,24 @@ const Sidebar = ({
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setInputValue(e.target.value);
-    setMissingChatName(false);
+    setMissingChatInfo(false);
   };
 
   const handleCreateChatClick = (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault;
-    setMissingChatName(false);
-    if (inputValue !== '') {
+    if (inputValue !== '' && selectedUserId !== '') {
       saveChatBox(inputValue);
       setAddModal(false);
       setInputValue('');
-    } else {
-      setMissingChatName(true);
+    }
+
+    if (inputValue === '') {
+      setMissingChatInfo(true);
+    }
+    if (selectedUserId === '') {
+      setMissingUserInfo(true);
     }
   };
 
@@ -227,7 +235,7 @@ const Sidebar = ({
       resetedUsersSelection,
       index
     );
-
+    setMissingUserInfo(false);
     setUsers(setUsersStatus);
 
     setSelectedUserId(setUsersStatus[index].id);
@@ -292,11 +300,12 @@ const Sidebar = ({
           <Input
             value={inputValue}
             placeholder="Chat name"
-            missingChatName={missingChatName}
+            $boxShadow={missingChatInfo ? '#dc2626' : 'none'}
             handleChange={handleInputChange}
           />
           <UserListWrapper
             $themeColor={theme === 'light' ? 'dark' : 'light'}
+            $boxShadow={missingUserInfo ? '#dc2626' : 'none'}
           >
             {users.map(
               (user) =>

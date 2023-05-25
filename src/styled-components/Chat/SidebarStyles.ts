@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import type {
   ThemeProps,
   BackgroundImageProps,
-  SelectingProps
+  SelectingProps,
+  MissingUserInfoProps
 } from '../../types/styled-components-types';
 
 const SidebarWrapper = styled.div<ThemeProps>`
@@ -84,7 +85,7 @@ const Title = styled.h2`
   align-items: center;
 `;
 
-const UserListWrapper = styled.ul<ThemeProps>`
+const UserListWrapper = styled.ul<MissingUserInfoProps>`
   display: flex;
   flex-direction: column;
   text-decoration: none;
@@ -93,6 +94,7 @@ const UserListWrapper = styled.ul<ThemeProps>`
   border: 1px solid
     ${(props) =>
       props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
+  box-shadow: 0 0 0 2px ${(props) => props.$boxShadow};
   overflow-y: auto;
   scroll-behavior: smooth;
 `;

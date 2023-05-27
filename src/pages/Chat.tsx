@@ -90,7 +90,7 @@ const Chat = () => {
     const recentMessagesQuery = query(
       collection(getFirestore(), 'messages'),
       orderBy('timestamp', 'desc'),
-      limit(12)
+      limit(20)
     );
 
     // Start listening to the query.

@@ -22,9 +22,9 @@ const EmojiWrapper = styled.div`
   left: 1rem;
 
   @media (max-width: 450px) {
-    bottom: -1.8rem;
-    left: -1.2rem;
-    transform: scale(0.8);
+    bottom: -3rem;
+    left: -3rem;
+    transform: scale(0.75);
   }
 `;
 

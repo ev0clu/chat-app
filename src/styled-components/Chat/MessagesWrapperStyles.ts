@@ -18,6 +18,10 @@ const Wrapper = styled.div<ThemeProps>`
   padding: 1rem;
   overflow-y: auto;
   scroll-behavior: smooth;
+
+  @media (max-width: 900px) {
+    padding: 0;
+  }
 `;
 
 const MessagesWrapper = styled.div<MessagesWrapperProps>`

@@ -44,6 +44,7 @@ const TopWrapper = styled.div<ThemeProps>`
 
   @media (max-width: 900px) {
     flex-direction: column;
+    gap: 1.5rem;
   }
 `;
 
@@ -53,6 +54,17 @@ const BottomWrapper = styled.ul`
   align-items: flex-start;
   gap: 1rem;
   padding: 1rem 1rem;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
 `;
 
 const StyledChatBox = styled.li<SelectingProps>`
@@ -101,18 +113,24 @@ const StyledChatLogo = styled.div`
   }
 `;
 
-const Title = styled.h2`
+const ChatName = styled.h2`
   display: flex;
   align-items: center;
 
-  @media (max-width: 900px) {
+  @media (max-width: 450px) {
     display: none;
   }
+`;
+
+const UserName = styled.h2`
+  display: flex;
+  align-items: center;
 `;
 
 const UserListWrapper = styled.ul<MissingUserInfoProps>`
   display: flex;
   flex-direction: column;
+  align-items: center;
   text-decoration: none;
   list-style-type: none;
   height: 6rem;
@@ -125,7 +143,7 @@ const UserListWrapper = styled.ul<MissingUserInfoProps>`
 `;
 
 const StyledUserList = styled.li<SelectingProps>`
-  padding: 0.3rem 6rem;
+  padding: 0.3rem 1rem;
   font-size: 0.8rem;
   background-color: ${(props) => {
     if (props.$backgroundColor) {
@@ -147,16 +165,6 @@ const StyledUserPic = styled.div<BackgroundImageProps>`
   background-image: ${(props) => props.$backgroundImage};
   background-repeat: no-repeat;
   background-size: 4rem;
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-
-  @media (min-width: 900px) {
-    flex-direction: row;
-  }
 `;
 
 const AddChatWrapper = styled.div<ThemeProps>`
@@ -187,7 +195,8 @@ export {
   BottomWrapper,
   StyledChatBox,
   StyledChatLogo,
-  Title,
+  ChatName,
+  UserName,
   UserListWrapper,
   StyledUserList,
   StyledUserPic,

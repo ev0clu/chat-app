@@ -9,7 +9,8 @@ import {
   BottomWrapper,
   StyledChatBox,
   StyledChatLogo,
-  Title,
+  ChatName,
+  UserName,
   UserListWrapper,
   StyledUserList,
   StyledUserPic,
@@ -281,7 +282,7 @@ const Sidebar = ({
               key={chatData.chatId}
             >
               <StyledChatLogo>{chatData.chatName[0]}</StyledChatLogo>
-              <Title>{chatData.chatName}</Title>
+              <ChatName>{chatData.chatName}</ChatName>
             </StyledChatBox>
           ) : (
             ''
@@ -314,7 +315,7 @@ const Sidebar = ({
                     onClick={handleUserSelectClick}
                     key={user.id}
                   >
-                    <Title>{user.name}</Title>
+                    <UserName>{user.name}</UserName>
                   </StyledUserList>
                 )
             )}

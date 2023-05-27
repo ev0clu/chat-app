@@ -70,6 +70,11 @@ const StyledIconMsgButton = styled.button`
   &:active {
     opacity: 0.7;
   }
+
+  @media (max-width: 450px) {
+    height: 2rem;
+    width: 2rem;
+  }
 `;
 
 const StyledIconSidebarButton = styled.button<ThemeProps>`
@@ -97,6 +102,11 @@ const StyledIconSidebarButton = styled.button<ThemeProps>`
 
   &:active {
     opacity: 0.7;
+  }
+
+  @media (max-width: 450px) {
+    height: 2rem;
+    width: 2rem;
   }
 `;
 

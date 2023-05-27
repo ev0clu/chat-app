@@ -17,6 +17,10 @@ const StyledInput = styled.input<MissingChatInfoProps>`
   &:focus {
     outline: none;
   }
+
+  @media (max-width: 450px) {
+    max-width: 300px;
+  }
 `;
 
 export default StyledInput;

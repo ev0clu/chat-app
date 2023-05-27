@@ -7,16 +7,13 @@ import EmojiPicker, {
   EmojiClickData,
   EmojiStyle
 } from 'emoji-picker-react';
-
 import { useState, useEffect, useRef } from 'react';
-
 import {
   getFirestore,
   collection,
   addDoc,
   serverTimestamp
 } from 'firebase/firestore';
-
 import Input from '../../elements/Input';
 import Button from '../../elements/Button';
 

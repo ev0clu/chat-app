@@ -5,9 +5,7 @@ import {
   Paragraph,
   ButtonWrapper
 } from '../../styled-components/Chat/HeaderStyles';
-
 import { HeaderProps } from '../../types/functional-components-types';
-
 import { format } from 'date-fns';
 import { useEffect, useState, useContext } from 'react';
 import ThemeContext from '../../helper/ThemeContext';

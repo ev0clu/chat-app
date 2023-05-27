@@ -2,7 +2,6 @@ import {
   SidebarProps,
   UsersProps
 } from '../../types/functional-components-types';
-
 import {
   SidebarWrapper,
   StyledLink,
@@ -18,7 +17,6 @@ import {
   AddChatWrapper,
   StyledAddChatTitle
 } from '../../styled-components/Chat/SidebarStyles';
-
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import {
   getFirestore,
@@ -29,7 +27,6 @@ import {
   onSnapshot,
   serverTimestamp
 } from 'firebase/firestore';
-
 import ThemeContext from '../../helper/ThemeContext';
 import { useContext, useState, useEffect, useRef } from 'react';
 import Button from '../../elements/Button';
@@ -105,6 +102,62 @@ const Sidebar = ({
     };
   }, []);
 
+  const handleAddModalClick = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault;
+    setAddModal(true);
+    setSelectedUserId('');
+    setMissingChatInfo(false);
+    setMissingUserInfo(false);
+    const resetedUsersSelection = resetUsersSelection(users);
+    setUsers(resetedUsersSelection);
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setInputValue(e.target.value);
+    setMissingChatInfo(false);
+  };
+
+  const handleCreateChatClick = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault;
+    if (inputValue !== '' && selectedUserId !== '') {
+      saveChatBox(inputValue);
+      setAddModal(false);
+      setInputValue('');
+    }
+
+    if (inputValue === '') {
+      setMissingChatInfo(true);
+    }
+    if (selectedUserId === '') {
+      setMissingUserInfo(true);
+    }
+  };
+
+  const handleUserSelectClick = (
+    e: React.MouseEvent<HTMLElement>
+  ) => {
+    e.preventDefault;
+    const id = e.currentTarget.dataset.id;
+
+    const index = users.findIndex((element) => element.id === id);
+
+    const resetedUsersSelection = resetUsersSelection(users);
+    const setUsersStatus = setUserSelection(
+      resetedUsersSelection,
+      index
+    );
+    setMissingUserInfo(false);
+    setUsers(setUsersStatus);
+
+    setSelectedUserId(setUsersStatus[index].id);
+  };
+
   const saveChatBox = async (name: string) => {
     let isChat = true;
     let id = '';
@@ -167,43 +220,6 @@ const Sidebar = ({
     onAuthStateChanged(getAuth(), authStateObserver);
   };
 
-  const handleAddModalClick = (
-    e: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    e.preventDefault;
-    setAddModal(true);
-    setSelectedUserId('');
-    setMissingChatInfo(false);
-    setMissingUserInfo(false);
-    const resetedUsersSelection = resetUsersSelection(users);
-    setUsers(resetedUsersSelection);
-  };
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setInputValue(e.target.value);
-    setMissingChatInfo(false);
-  };
-
-  const handleCreateChatClick = (
-    e: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    e.preventDefault;
-    if (inputValue !== '' && selectedUserId !== '') {
-      saveChatBox(inputValue);
-      setAddModal(false);
-      setInputValue('');
-    }
-
-    if (inputValue === '') {
-      setMissingChatInfo(true);
-    }
-    if (selectedUserId === '') {
-      setMissingUserInfo(true);
-    }
-  };
-
   const resetUsersSelection = (userArray: UsersProps[]) => {
     const resetedUsersStatus = userArray.map((user) => ({ ...user }));
     resetedUsersStatus.forEach((user) => {
@@ -220,25 +236,6 @@ const Sidebar = ({
     initArray[index].isSelected = true;
 
     return initArray;
-  };
-
-  const handleUserSelectClick = (
-    e: React.MouseEvent<HTMLElement>
-  ) => {
-    e.preventDefault;
-    const id = e.currentTarget.dataset.id;
-
-    const index = users.findIndex((element) => element.id === id);
-
-    const resetedUsersSelection = resetUsersSelection(users);
-    const setUsersStatus = setUserSelection(
-      resetedUsersSelection,
-      index
-    );
-    setMissingUserInfo(false);
-    setUsers(setUsersStatus);
-
-    setSelectedUserId(setUsersStatus[index].id);
   };
 
   return (

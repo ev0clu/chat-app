@@ -137,7 +137,6 @@ const UserName = styled.h2`
 const UserListWrapper = styled.ul<MissingUserInfoProps>`
   display: flex;
   flex-direction: column;
-  align-items: center;
   text-decoration: none;
   list-style-type: none;
   height: 6rem;
@@ -150,7 +149,7 @@ const UserListWrapper = styled.ul<MissingUserInfoProps>`
 `;
 
 const StyledUserList = styled.li<SelectingProps>`
-  padding: 0.3rem 1rem;
+  padding: 0.3rem 2rem;
   font-size: 0.8rem;
   background-color: ${(props) => {
     if (props.$backgroundColor) {
@@ -162,6 +161,10 @@ const StyledUserList = styled.li<SelectingProps>`
     cursor: pointer;
     background-color: ${(props) =>
       props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
+  }
+
+  @media (max-width: 450px) {
+    padding: 0.3rem 1rem;
   }
 `;
 

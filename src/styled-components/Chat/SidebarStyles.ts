@@ -8,18 +8,20 @@ import type {
 } from '../../types/styled-components-types';
 
 const SidebarWrapper = styled.div<ThemeProps>`
-  display: none;
   grid-column: 1/2;
   grid-row: 1/4;
+  display: flex;
+  flex-direction: column;
   border-right: 1px solid
     ${(props) =>
       props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
   min-width: 22rem;
   overflow-y: auto;
   scroll-behavior: smooth;
+  max-height: 100vh;
 
-  @media (min-width: 900px) {
-    display: block;
+  @media (max-width: 900px) {
+    min-width: 5rem;
   }
 `;
 
@@ -39,6 +41,10 @@ const TopWrapper = styled.div<ThemeProps>`
   padding: 1rem 1rem;
   background-color: ${(props) =>
     props.$themeColor === 'light' ? '#27272a' : '#fff'};
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
 `;
 
 const BottomWrapper = styled.ul`
@@ -68,6 +74,11 @@ const StyledChatBox = styled.li<SelectingProps>`
     background-color: ${(props) =>
       props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
   }
+
+  @media (max-width: 900px) {
+    justify-content: center;
+    padding: 0;
+  }
 `;
 
 const StyledChatLogo = styled.div`
@@ -83,11 +94,20 @@ const StyledChatLogo = styled.div`
   border-radius: 50%;
   background-color: #059669;
   color: #fff;
+
+  @media (max-width: 900px) {
+    height: 3rem;
+    width: 3rem;
+  }
 `;
 
 const Title = styled.h2`
   display: flex;
   align-items: center;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
 `;
 
 const UserListWrapper = styled.ul<MissingUserInfoProps>`
@@ -131,8 +151,12 @@ const StyledUserPic = styled.div<BackgroundImageProps>`
 
 const ButtonWrapper = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 0.5rem;
+
+  @media (min-width: 900px) {
+    flex-direction: row;
+  }
 `;
 
 const AddChatWrapper = styled.div<ThemeProps>`

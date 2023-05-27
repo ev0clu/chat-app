@@ -9,6 +9,11 @@ const Wrapper = styled.div`
   grid-column-gap: 1rem;
   padding: 1rem;
   position: relative;
+
+  @media (max-width: 900px) {
+    grid-column-gap: 0.5rem;
+    padding: 0.5rem;
+  }
 `;
 
 const EmojiWrapper = styled.div`

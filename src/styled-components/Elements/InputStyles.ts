@@ -8,7 +8,7 @@ const StyledInput = styled.input<MissingChatInfoProps>`
   border: none;
   box-shadow: 0 0 0 2px ${(props) => props.$boxShadow};
   background-color: #f0f2f5;
-  min-width: 200px;
+  min-width: 170px;
 
   &::placeholder {
     color: #a3a3a3;

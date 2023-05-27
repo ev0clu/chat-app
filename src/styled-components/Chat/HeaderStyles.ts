@@ -23,6 +23,11 @@ const StyledChatLogo = styled.div`
   border-radius: 50%;
   background-color: #059669;
   color: #fff;
+
+  @media (max-width: 900px) {
+    height: 3rem;
+    width: 3rem;
+  }
 `;
 
 const Title = styled.h2`
@@ -39,6 +44,10 @@ const Paragraph = styled.p`
   align-items: center;
   font-size: 1.1rem;
   color: #a3a3a3;
+
+  @media (max-width: 900px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const ButtonWrapper = styled.div`

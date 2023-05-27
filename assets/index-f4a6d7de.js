@@ -3372,7 +3372,7 @@ This typically indicates that your device does not have a healthy Internet conne
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
 `,XP=G.p`
-  word-break: break-all;
+  overflow-wrap: break-word;
 `,JP=({selectedChat:t,filteredMessages:e,scroll:n,userId:r})=>{const i=m.useContext(bc);return x.jsxs(KP,{$themeColor:i==="light"?"dark":"light",children:[x.jsx("span",{ref:n}),e.map(a=>a.chatId===t.chatId?x.jsx(GP,{$orientation:a.uid===r?"right":"left",children:x.jsxs(QP,{children:[x.jsx(YP,{children:a.name}),x.jsx(XP,{children:a.text})]})},a.id):"")]})},ZP=G.div`
   grid-column: 2/3;
   grid-row: 3/4;

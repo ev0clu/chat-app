@@ -53,7 +53,7 @@ const StyledName = styled.p`
 `;
 
 const StyledText = styled.p`
-  word-break: break-all;
+  overflow-wrap: break-word;
 `;
 
 export {

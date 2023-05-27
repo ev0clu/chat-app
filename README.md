@@ -41,4 +41,6 @@ A general chat app has built.
 
 ### Layout
 
-![layout picture](https://github.com/ev0clu/chat-app/blob/main/layout.png?raw=true)
+![layout picture](https://github.com/ev0clu/chat-app/blob/main/layout1.png?raw=true)
+
+![layout picture](https://github.com/ev0clu/chat-app/blob/main/layout2.png?raw=true)

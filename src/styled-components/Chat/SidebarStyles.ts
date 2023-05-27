@@ -15,7 +15,7 @@ const SidebarWrapper = styled.div<ThemeProps>`
   border-right: 1px solid
     ${(props) =>
       props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
-  min-width: 22rem;
+  max-width: 22rem;
   overflow-y: auto;
   scroll-behavior: smooth;
   max-height: 100vh;
@@ -54,6 +54,10 @@ const BottomWrapper = styled.ul`
   align-items: flex-start;
   gap: 1rem;
   padding: 1rem 1rem;
+
+  @media (max-width: 450px) {
+    align-items: center;
+  }
 `;
 
 const ButtonWrapper = styled.div`
@@ -70,7 +74,8 @@ const ButtonWrapper = styled.div`
 const StyledChatBox = styled.li<SelectingProps>`
   display: flex;
   flex-direction: row;
-  width: 100%;
+  align-items: center;
+  width: 20rem;
   gap: 1rem;
   text-decoration: none;
   padding: 1rem 2rem;
@@ -87,9 +92,9 @@ const StyledChatBox = styled.li<SelectingProps>`
       props.$themeColor === 'light' ? '#78716c' : '#d4d4d4'};
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 450px) {
     justify-content: center;
-    padding: 0;
+    width: 2rem;
   }
 `;
 
@@ -97,6 +102,7 @@ const StyledChatLogo = styled.div`
   grid-row: 1/3;
   display: flex;
   justify-content: center;
+  flex-shrink: 0;
   align-items: center;
   font-size: 2rem;
   font-weight: 500;
@@ -114,8 +120,9 @@ const StyledChatLogo = styled.div`
 `;
 
 const ChatName = styled.h2`
-  display: flex;
-  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   @media (max-width: 450px) {
     display: none;

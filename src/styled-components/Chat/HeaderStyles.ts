@@ -33,8 +33,9 @@ const StyledChatLogo = styled.div`
 const Title = styled.h2`
   grid-column: 2/3;
   grid-row: 1/2;
-  display: flex;
-  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const Paragraph = styled.p`

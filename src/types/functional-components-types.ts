@@ -92,7 +92,7 @@ interface ButtonProps {
 interface InputProps {
   value: string;
   placeholder: string;
-  $boxShadow: string;
+  $boxShadow?: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleInputKeyDown?: (
     e: React.KeyboardEvent<HTMLInputElement>

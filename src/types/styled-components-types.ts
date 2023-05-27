@@ -20,7 +20,7 @@ interface SelectingProps {
 }
 
 interface MissingChatInfoProps {
-  $boxShadow: string;
+  $boxShadow?: string;
 }
 
 interface MissingUserInfoProps {

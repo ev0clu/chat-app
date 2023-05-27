@@ -15,6 +15,12 @@ const EmojiWrapper = styled.div`
   position: absolute;
   bottom: 1rem;
   left: 1rem;
+
+  @media (max-width: 450px) {
+    bottom: -1.8rem;
+    left: -1.2rem;
+    transform: scale(0.8);
+  }
 `;
 
 export { Wrapper, EmojiWrapper };

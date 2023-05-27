@@ -36,6 +36,10 @@ const StyledMessageBubble = styled.div`
   max-width: 20rem;
   padding: 0.5rem 1.5rem;
   font-size: 1.1rem;
+
+  @media (max-width: 450px) {
+    max-width: 10rem;
+  }
 `;
 
 const StyledName = styled.p`

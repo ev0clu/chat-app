@@ -41,6 +41,10 @@ const StyledNormalButton = styled.button`
     transform: translateY(4px);
     transition-duration: 0.35s;
   }
+
+  @media (max-width: 450px) {
+    font-size: 1.3rem;
+  }
 `;
 
 const StyledIconMsgButton = styled.button`

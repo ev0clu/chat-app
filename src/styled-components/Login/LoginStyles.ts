@@ -14,12 +14,18 @@ const LoginWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
   gap: 2rem;
   background-color: #fff;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
   padding: 4rem 5rem 4rem 5rem;
   border-radius: 0.5rem;
+
+  @media (max-width: 450px) {
+    padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+    max-width: 90vw;
+  }
 `;
 
 export { Main, LoginWrapper };

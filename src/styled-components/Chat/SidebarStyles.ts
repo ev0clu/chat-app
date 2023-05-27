@@ -8,6 +8,7 @@ import type {
 } from '../../types/styled-components-types';
 
 const SidebarWrapper = styled.div<ThemeProps>`
+  display: none;
   grid-column: 1/2;
   grid-row: 1/4;
   border-right: 1px solid
@@ -16,6 +17,10 @@ const SidebarWrapper = styled.div<ThemeProps>`
   min-width: 22rem;
   overflow-y: auto;
   scroll-behavior: smooth;
+
+  @media (min-width: 900px) {
+    display: block;
+  }
 `;
 
 const StyledLink = styled(Link)`

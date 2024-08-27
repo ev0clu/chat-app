@@ -1,6 +1,6 @@
 # **Chat app**
 
-A general chat app has built.
+A simple chat app has built based on Facebook messenger. User can use public or privat chat as well. For private chat, the user needs to add a friend into the room.
 
 ### Demo: [Link](https://ev0clu.github.io/chat-app/)
 
